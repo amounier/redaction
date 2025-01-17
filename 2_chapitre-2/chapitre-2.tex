@@ -141,7 +141,7 @@
 \providecommand{\keywords}[1]
 {
   \small    
-  \textbf{\textit{Keywords~---}} #1
+  \textbf{\textit{Keywords~--}} #1
 }
 
 % Titre ---------------------------------------
@@ -152,7 +152,7 @@
 \author[2,3]{Louis-Gaëtan Giraudet}
 \author[4]{Philippe Drobinski}
 \affil[1]{\small{Agence de l'environnement et de la maîtrise de l'énergie (ADEME), Angers, France}}
-\affil[2]{\small{ENPC, École des Ponts ParisTech, Champs-sur-Marne, France}}
+\affil[2]{\small{ENPC - Institut Polytechnique de Paris, Champs-sur-Marne, France}}
 \affil[3]{\small{CIRED -- ENPC, AgroParisTech, EHESS, Cirad, CNRS, Nogent-sur-Marne, France}}
 \affil[4]{\small{LMD -- IPSL, École Polytechnique - IPP, ENS - PSL , Sorbonne Université, CNRS, Palaiseau, France}}
 
@@ -166,17 +166,141 @@
 % Méthode :
 % https://www.nature.com/documents/nature-summary-paragraph.pdf
 \begin{abstract}
-    abstract
+    Energy efficiency building renovation, particularly through thermal insulation, is a key factor in the transformation of the building stock to reduce greenhouse gas emissions and adapt dwellings to future climates. Thermal renovation of buildings is a particularly costly operation that rarely pays off for the person carrying out the work. In France, many renovation projects are financed in part by the state, and this funding involves targeting the most effective works. However, this efficiency is only measured in terms of heating needs, while the critical nature of the inadequacy of housing for future heat increases year on year.  Taking account of climate change, its future evolution, and the need to adapt homes will therefore influence the optimum renovations to target as a priority now. Here we show that the displacement of the optimum differs according to the type of building and the intensity of warming, and according to the type of renovation work. This study presents a first way of considering dynamic, energy and economic optimisations, with RC modelling of building typologies. The conclusions are different depending on the type of action carried out: for example, the insulation of opaque walls does have an antagonistic effect on heating and cooling needs (but this is particularly visible in the coldest meteorological years and without night-time natural over-ventilation), but total energy needs are always decreasing. Thus, inter-annual variations in typology and weather play a decisive role in defining the optimum. The results call into question the selection criteria for subsidised renovations, as well as the renovations carried out in practice in France. The question of the interaction between summer and winter comfort has been raised in official reports in France, because adaptation is underdeveloped, and the majority of measures are focused on winter thermal comfort. We could ask the following (deliberately provocative) question: ‘Do we need to renovate buildings on a massive scale if the French climate warms up significantly between now and the end of the century? The answer is yes, but not for all buildings or all regions in the same way. 
 \end{abstract}
 
-\keywords{one, two, three, four}
+\keywords{Thermal insulation, Heating and cooling needs, Adaptation, Mitigation}
 
 \clearpage
 \tableofcontents
 
 \clearpage
 
-\cite{cstb_base_2024}
+\section{Introduction}
+\label{sec:intro}
+
+
+\section{RC analogy modelling}
+\label{sec:rc}
+
+    \subsection{RC analogy and computation} % (fold)
+    \label{sub:rc_analogy_and_computation}
+
+        \subsubsection{RC analogy} % (fold)
+        \label{ssub:rc_analogy}
+        
+        % subsubsection rc_analogy (end)
+
+        \subsubsection{Model construction} % (fold)
+        \label{ssub:model_construction}
+        
+        % subsubsection model_construction (end)
+
+        \subsubsection{Model computation} % (fold)
+        \label{ssub:model_computation}
+        
+        % subsubsection model_computation (end)
+
+    % subsection rc_analogy_and_computation (end)
+
+    \subsection{TABULA typologies} % (fold)
+    \label{sub:tabula_typologies}
+    
+    (\cite{loga_tabula_2016})
+
+    % subsection tabula_typologies (end)
+
+    \subsection{Weather data} % (fold)
+    \label{sub:weather_data}
+
+        \subsubsection{French climate zones} % (fold)
+        \label{ssub:french_climate_zones}
+
+        
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.32\columnwidth]{figures/zcl_winter.png}
+            \includegraphics[width=0.32\columnwidth]{figures/zcl_summer.png}
+            \includegraphics[width=0.32\columnwidth]{figures/zcl.png}
+            \caption{\label{fig:zcl} Maps of french climate zones.}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                \textbf{(left to right)} Map of \enquote{winter}, \enquote{summer} and combined climate zones. The winter climate zones were defined in a 1988 decree on the thermal characteristics of residential buildings (\cite{jorf_arrete_1988}). Corsica is part of region H3. Summer climate zones were defined in 2000 in parallel with new thermal regulation laws (\cite{jorf_arrete_2000}). The 8 climate zones are a combination of the two zone types (\cite{jorf_arrete_2012}) and the map shows the \enquote{central prefectures} used to define the meteorological data for each zone. 
+                
+                 
+              \end{quote}
+        \end{figure}
+        
+        % subsubsection french_climate_zones (end)
+        \subsubsection{Historical data} % (fold)
+        \label{ssub:historical_data}
+        
+        % subsubsection historical_data (end)
+
+        \subsubsection{Projection data} % (fold)
+        \label{ssub:projection_data}
+        
+        % subsubsection projection_data (end)
+
+        \subsubsection{Standard weather data} % (fold)
+        \label{ssub:standard_weather_data}
+        
+        % subsubsection standard_weather_data (end)
+    
+    % subsection weather_data (end)
+
+    \subsection{Behaviour definition} % (fold)
+    \label{sub:behaviour_definition}
+
+
+    
+    % subsection behaviour_definition (end)
+% section rc (end)
+
+
+\section{Interactions between summer and winter comfort}
+\label{sec:inter}
+
+    \subsection{Characterisation of single renovation actions} % (fold)
+        \label{sub:characterisation_of_single_renovation_actions}
+        
+        % subsection characterisation_of_single_renovation_actions (end)    
+
+    \subsection{Energy needs for TABULA typologies} % (fold)
+    \label{sub:energy_needs_for_tabula_typologies}
+    
+    % subsection energy_needs_for_tabula_typologies (end)
+% section inter (end)
+
+\section{Climate impact on optimal renovations}
+\label{sec:opti}
+
+    \subsection{Optimal energy efficiency} % (fold)
+    \label{sub:optimal_energy_efficiency}
+    
+    % subsection optimal_energy_efficiency (end)
+
+    \subsection{Optimal economic efficiency} % (fold)
+    \label{sub:optimal_economic_efficiency}
+    
+    % subsection optimal_economic_efficiency (end)
+% section opti (end)
+
+% \section{Generalisation across the entire french building stock}
+% \label{sec:generalisation}
+
+% % section generalisation (end)
+
+\section{Discussion}
+\label{sec:disc}
+% section disc (end)
+
+\section{Conclusion}
+\label{sec:conclu}
+% section conclu (end)
+
+
 
 \clearpage
 \printbibliography
