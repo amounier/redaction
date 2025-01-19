@@ -179,6 +179,16 @@
 \section{Introduction}
 \label{sec:intro}
 
+consommations des batiments dans le monde et en France (\cite{unep_2023_2024}, \cite{sdes_chiffres_2023}, \cite{sdes_consommation_2023})
+
+changement climatique en France (physique et scenarios officiels) (\cite{ipcc_climate_2021}, \cite{ouzeau_heat_2016}, \cite{ministere_de_la_transition_ecologique_trajectoire_2023})
+
+consommations futures des batiments (\cite{larsen_climate_2020},\cite{moreau_evaluation_2023},\cite{filahi_projections_2024}, \cite{tao_uncertainty_2024})
+
+inadaptation du parc aux temperatures futures (\cite{cour_des_comptes_laction_2024}, \cite{i4ce_vagues_2024})
+
+rentabilité et cout des renovations (\cite{ademe_renovation_2019}, \cite{i4ce_trajectoires_2023}, \cite{giraudet_analyse_2024})
+
 
 \section{RC analogy modelling}
 \label{sec:rc}
@@ -188,25 +198,88 @@
 
         \subsubsection{RC analogy} % (fold)
         \label{ssub:rc_analogy}
+
+
+        \cite{fourier_theorie_1822}, \cite{bolmont_evolution_2003}
         
         % subsubsection rc_analogy (end)
 
         \subsubsection{Model construction} % (fold)
         \label{ssub:model_construction}
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.99\columnwidth]{figures/RC_genmod_unlabeled.pdf}
+            \caption{\label{fig:rc_mod} Diagram of the general RC model.}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                Description. il faut ajouter les noms des composants 
+              \end{quote}
+        \end{figure}  
         
         % subsubsection model_construction (end)
 
         \subsubsection{Model computation} % (fold)
         \label{ssub:model_computation}
         
+        mathematiques derriere le calcul
+        \cite{madsen_estimation_1995}, \cite{rouchier_solving_2018}
+
+        
         % subsubsection model_computation (end)
+
+        \subsubsection{Model verification} % (fold)
+        \label{ssub:model_verification}
+        
+        resultats de comparaisons avec TABULA 
+
+        comparaison avec \textcite{pomianowski_method_2023} (en faire d'autres)
+        % subsubsection model_verification (end)
 
     % subsection rc_analogy_and_computation (end)
 
     \subsection{TABULA typologies} % (fold)
     \label{sub:tabula_typologies}
     
-    (\cite{loga_tabula_2016})
+        \subsubsection{Typologies definition} % (fold)
+        \label{ssub:typologies_definition}
+        
+        historique et description
+        \cite{pouget_consultants_batiments_2015}, \cite{loga_tabula_2016}
+
+        valeurs moyennes d'interet pour les typologies et les 3 niveaux (tableau)
+
+        typologies non isolées
+        % subsubsection typologies_definition (end)
+
+        \subsubsection{Typology representation in the French building stock} % (fold)
+        \label{ssub:typologies_distribution}
+        
+        representativite des typologies dans le parc français 
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_buildings_ponderated.png}\\
+            \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_households_ponderated.png}
+            \caption{\label{fig:tab_stock} Distribution of TABULA typologies in the French building stock.}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                \textbf{(top to bottom)} Description.  
+              \end{quote}
+        \end{figure}
+
+        detail de la methode pour la séparation entre SFH et TH
+
+        
+
+
+
+
+        % subsubsection typologies_distribution (end)
+
+
+    
 
     % subsection tabula_typologies (end)
 
@@ -216,7 +289,22 @@
         \subsubsection{French climate zones} % (fold)
         \label{ssub:french_climate_zones}
 
-        
+        utilisation des zones climatiques françaises : limiter les calculs, la complexite, mais aussi s'inscrire dans les politiuqes de renovations qui les utilisent (CEE (\cite{ademe_french_2011}), MPR (\cite{anah_aides_2024}))
+
+        definitions des prefecture centrales (\ref{fig:zcl})
+        \begin{equation}
+            \label{eq:pref_centr}
+            p_c = \min_{d \in \mathbf{d}_c} \left(\|\mathbf{c}_c - \mathbf{c}_{dp}\|_2 \right)
+        \end{equation}
+        With,
+        $$
+        \begin{dcases}
+            \mathbf{d}_c&\text{: list of departments $d$ in climate zone $c$}\\
+            \mathbf{c}_c&\text{: geographic coordinates of climate zone $c$ centroid}\\
+            \mathbf{c}_{dp}&\text{: geographic coordinates of department $d$ prefecture}\\
+        \end{dcases}
+        $$
+
         \begin{figure}[ht]
             \centering
             \includegraphics[width=0.32\columnwidth]{figures/zcl_winter.png}
@@ -226,26 +314,28 @@
             \begin{quote}
                 \vspace{-2mm}
                 \small\noindent
-                \textbf{(left to right)} Map of \enquote{winter}, \enquote{summer} and combined climate zones. The winter climate zones were defined in a 1988 decree on the thermal characteristics of residential buildings (\cite{jorf_arrete_1988}). Corsica is part of region H3. Summer climate zones were defined in 2000 in parallel with new thermal regulation laws (\cite{jorf_arrete_2000}). The 8 climate zones are a combination of the two zone types (\cite{jorf_arrete_2012}) and the map shows the \enquote{central prefectures} used to define the meteorological data for each zone. 
+                \textbf{(left to right)} Map of \enquote{winter}, \enquote{summer} and combined climate zones. The winter climate zones were defined in a 1988 decree on the thermal characteristics of residential buildings (\cite{jorf_arrete_1988}). Corsica is part of region H3. Summer climate zones were defined in 2000 in parallel with new thermal regulation laws (\cite{jorf_arrete_2000}). The 8 climate zones are a combination of the two zone types (\cite{jorf_arrete_2012}) and the map shows the \enquote{central prefectures} used to define the meteorological data for each zone, as defined in \eqref{eq:pref_centr}. 
                 
                  
               \end{quote}
         \end{figure}
         
         % subsubsection french_climate_zones (end)
-        \subsubsection{Historical data} % (fold)
+        \subsubsection{Historical and projection data} % (fold)
         \label{ssub:historical_data}
         
-        % subsubsection historical_data (end)
+        source des données 
+        (\cite{hersbach_era5_2020}, \cite{zippenfenig_open-meteocom_2024})
 
-        \subsubsection{Projection data} % (fold)
-        \label{ssub:projection_data}
-        
-        % subsubsection projection_data (end)
+        periode de reference 2000-2020
+
+        projection : \cite{sauquet_explore2_2021} cf DRIAS
+        % subsubsection historical_data (end)
 
         \subsubsection{Standard weather data} % (fold)
         \label{ssub:standard_weather_data}
         
+        pour economiser en temps de calcul, a chaque fois ets auf mention contraire, une année moyenne des périodes, définies tel que
         % subsubsection standard_weather_data (end)
     
     % subsection weather_data (end)
@@ -262,10 +352,74 @@
 \section{Interactions between summer and winter comfort}
 \label{sec:inter}
 
-    \subsection{Characterisation of single renovation actions} % (fold)
-        \label{sub:characterisation_of_single_renovation_actions}
+    \subsection{Single renovation actions} % (fold)
+    \label{sub:single_renovation_actions}
+    
+    actions monogestes : grande part des travaux de renovations (\cite{ademe_typologie_2019}, \cite{onre_renovation_2022})
+
+
+    liste des actions et details du choix (\cite{i4ce_trajectoires_2023}, \cite)
+
+    plus choix des typologies, des climats
+
+        \subsubsection{Roof insulation} % (fold)
+        \label{ssub:roof_insulation}
         
-        % subsection characterisation_of_single_renovation_actions (end)    
+        detailler les caractéristiques propre à ce type de rénovation, pourquoi les gens l'ont bcp fait etc. 
+
+        commenter l'interaction
+        % subsubsection roof_insulation (end)
+
+        \subsubsection{Walls insulation} % (fold)
+        \label{ssub:walls_insulation}
+
+        description des travaux, ITI car facade ancienne la plupart du temps ? 
+
+        commenter l'interaction
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.SFH.01.Gen_H1b_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.SFH.01.Gen_H2c_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.SFH.01.Gen_H3_conventionnel_th-bce_2020_2000-2020.png}\\
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.TH.01.Gen_H1b_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.TH.01.Gen_H2c_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.TH.01.Gen_H3_conventionnel_th-bce_2020_2000-2020.png}\\
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.MFH.01.Gen_H1b_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.MFH.01.Gen_H2c_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.MFH.01.Gen_H3_conventionnel_th-bce_2020_2000-2020.png}\\
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.AB.03.Gen_H1b_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.AB.03.Gen_H2c_conventionnel_th-bce_2020_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/walls_FR.N.AB.03.Gen_H3_conventionnel_th-bce_2020_2000-2020.png}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                \textbf{(left to right, top to bottom)} Description
+              \end{quote}
+        \end{figure}
+        
+        % subsubsection walls_insulation (end)
+
+        \subsubsection{Floor insulation} % (fold)
+        \label{ssub:floor_insulation}
+        
+        % subsubsection floor_insulation (end)
+
+        \subsubsection{Color of external surface} % (fold)
+        \label{ssub:color_of_external_surface}
+        
+        % subsubsection color_of_external_surface (end)
+
+        \subsubsection{Ventilation efficiency} % (fold)
+        \label{ssub:ventilation_efficiency}
+        
+        % subsubsection ventilation_efficiency (end)
+
+        \subsubsection{Shading of glazed surfaces} % (fold)
+        \label{ssub:shading_of_glazed}
+        
+        % subsubsection shading_of_ (end)
+    % subsection characterisation_of_single_renovation_actions (end)    
 
     \subsection{Energy needs for TABULA typologies} % (fold)
     \label{sub:energy_needs_for_tabula_typologies}
@@ -287,10 +441,40 @@
     % subsection optimal_economic_efficiency (end)
 % section opti (end)
 
-% \section{Generalisation across the entire french building stock}
-% \label{sec:generalisation}
+\section{Generalisation across the whole French building stock}
+\label{sec:generalisation}
+    
+    \subsection{Building stock calibration} % (fold)
+    \label{sub:calibration}
+    
+    utilisation de la base DPE (statistiques)
 
-% % section generalisation (end)
+    description de la représentatitivté de la base DPE (BDNB)
+
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.32\columnwidth]{figures/carte_repr_maison_dpe_nblog-BDNB.png}
+        \includegraphics[width=0.32\columnwidth]{figures/carte_repr_appartement_dpe_nblog-BDNB.png}
+        \includegraphics[width=0.32\columnwidth]{figures/DPE_distribution_dpe_france.png}
+        \caption{\label{fig:epc} Representativeness of EPC data in terms of number of dwellings and in energy performance labels.}
+        \begin{quote}
+            \vspace{-2mm}
+            \small\noindent
+            \textbf{(left to right)} Representativeness maps for single-family homes (SFH + TH) and multi-family homes (MFH + AB), and comparison of the distribution of energy performance labels in France (\cite{onre_parc_2022}) and in the BDNB database. Data from the BDNB (\cite{cstb_base_2024}), version 2023-11-a, aggregating data from the DPE database and the property database (\cite{ademe_donnees_2024}, \cite{cerema_documentation_2024}). 
+        \end{quote}
+    \end{figure}
+    % subsection calibration (end)
+
+    \subsection{Projection of heating and cooling needs} % (fold)
+    \label{sub:evolution_des_besoins_énergétiques}
+    
+    % subsection evolution_des_besoins_énergétiques (end)
+
+    \subsection{Projection of annual and instant energy demand} % (fold)
+    \label{sub:évoltuion_des_consommations}
+    
+    % subsection évoltuion_des_consommations (end)
+% section generalisation (end)
 
 \section{Discussion}
 \label{sec:disc}
