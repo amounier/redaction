@@ -206,7 +206,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \label{ssub:rc_analogy}
 
 
-        \cite{fourier_theorie_1822}, \cite{bolmont_evolution_2003}
+        \cite{fourier_theorie_1822}, \cite{ohm_galvanische_1827}, \cite{bolmont_evolution_2003}
         
         % subsubsection rc_analogy (end)
 
@@ -465,6 +465,24 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
     \subsection{Weather data} % (fold)
     \label{sub:weather_data}
 
+        
+        \subsubsection{Historical and projection data} % (fold)
+        \label{ssub:historical_data}
+        
+        source des données 
+        (\cite{hersbach_era5_2020}, \cite{zippenfenig_open-meteocom_2024})
+
+        periode de reference 2000-2020
+
+        projection : \cite{sauquet_explore2_2021} cf DRIAS
+
+        définition des périodes à +4°C
+
+        calcul des temperatures infra journalières 
+
+        calcul des flux solaires infra journaliers (\cite{knight_methodology_1991}, \cite{chow_new_2007})
+        % subsubsection historical_data (end)
+
         \subsubsection{French climate zones} % (fold)
         \label{ssub:french_climate_zones}
 
@@ -473,7 +491,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         definitions des prefecture centrales (\ref{fig:zcl})
         \begin{equation}
             \label{eq:pref_centr}
-            p_c = \min_{d \in \mathbf{d}_c} \left(\|\mathbf{c}_c - \mathbf{c}_{dp}\|_2 \right)
+            p_c = \arg \min_{d \in \mathbf{d}_c} \left(\|\mathbf{c}_c - \mathbf{c}_{dp}\|_2 \right)
         \end{equation}
         With,
         $$
@@ -500,20 +518,6 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \end{figure}
         
         % subsubsection french_climate_zones (end)
-        \subsubsection{Historical and projection data} % (fold)
-        \label{ssub:historical_data}
-        
-        source des données 
-        (\cite{hersbach_era5_2020}, \cite{zippenfenig_open-meteocom_2024})
-
-        periode de reference 2000-2020
-
-        projection : \cite{sauquet_explore2_2021} cf DRIAS
-
-        calcul des temperatures infra journalières 
-
-        calcul des flux solaires infra journaliers (\cite{knight_methodology_1991}, \cite{chow_new_2007})
-        % subsubsection historical_data (end)
 
         \subsubsection{Standard weather data} % (fold)
         \label{ssub:standard_weather_data}
