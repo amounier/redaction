@@ -126,11 +126,11 @@
 %\numberwithin{equation}{section}
 
 \makeatletter
-\renewcommand\p@figure{Figure~\@ }
+\renewcommand\p@figure{\small{Figure~\@ }}
 \makeatother
 
 \makeatletter
-\renewcommand\p@table{Table~\@ }
+\renewcommand\p@table{\small{Table~\@ }}
 \makeatother
 
 %Autres commandes
@@ -462,6 +462,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 
     % subsection tabula_typologies (end)
 
+    \clearpage
     \subsection{Weather data} % (fold)
     \label{sub:weather_data}
 
@@ -469,26 +470,168 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \subsubsection{Historical and projection data} % (fold)
         \label{ssub:historical_data}
         
-        source des données 
-        (\cite{hersbach_era5_2020}, \cite{zippenfenig_open-meteocom_2024})
+        \paragraph{Historical data}\mbox{}\\ % (fold)
+        \label{par:historical_data}
+        
+        Once the buildings and their physical and technical characteristics have been defined, the second parameter required for thermal modelling is the basic meteorological data. In this simplified RC model, only outdoor temperatures and direct and diffuse solar radiation are considered. In the more comprehensive building energy simulations, data on relative humidity, wind speed and direction and dew point temperature are also used (\cite{bhandari_evaluation_2012}).\\
 
-        periode de reference 2000-2020
+        Meteorological reanalysis data from the ERA5 project (\cite{hersbach_era5_2020}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The ERA5 reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_era5_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
 
-        projection : \cite{sauquet_explore2_2021} cf DRIAS
+        \begin{subequations}
+            \begin{empheq}[left=\empheqlbrace]{align}
+                \mathrm{MAE} &= \frac{1}{n}~\sum_{i=1}^n |\hat{y_i}-y_i|\label{eq:mae}\\
+                \mathrm{RMSE} &= \sqrt{\frac{1}{n}~\sum_{i=1}^n \left(\hat{y_i}-y_i\right)^2}\label{eq:rmse}
+            \end{empheq}
+        \end{subequations}
+        With,
+        $$
+        \begin{dcases}
+            \hat{y_i}&\text{: the observations values}\\
+            y_i&\text{: the reanalysis values}\\
+            n&\text{: number of months in the comparison period}\\
+        \end{dcases}
+        $$
 
-        définition des périodes à +4°C
+        \begin{table}[ht]
+            \caption{\label{tab:rmse_era5_mf} Table of differences between ERA5 reanalysis and Météo-France observation data (mean temperature and global radiation) for the 8 French climate zones.}
+            \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lllcccccccc}
+            \toprule
+             &&& H1a & H1b & H1c & H2a & H2b & H2c & H2d & H3 \\
+            
+             &unit&& 2010-2023 & 1994-1999 & 2017-2023 & 2009-2023 & 2011-2023 & 1968-2023 & 2004-2017 & 2002-2011 \\
+            \midrule
+            MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.35 & 0.52 & 0.60 & 0.21 & 0.22 & 0.48 & 1.40 & 0.99 \\
+            &&$\mathrm{RMSE}$&  0.45 & 0.64 & 0.68 & 0.26 & 0.28 & 0.61 & 1.50 & 1.14 \\
+            GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$&  1.50 & 5.22 & 2.43 & 1.70 & 1.47 & 2.06 & 2.83 & 1.70 \\
+            &&$\mathrm{RMSE}$&  1.94 & 6.37 & 3.68 & 2.27 & 1.90 & 2.76 & 6.10 & 2.10 \\
+            \bottomrule
+            \end{tabular}}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
+            \end{quote}
+        \end{table}
 
-        calcul des temperatures infra journalières 
+        \paragraph{Projection data}\mbox{}\\ % (fold)
+        \label{par:proj_data}
 
-        calcul des flux solaires infra journaliers (\cite{knight_methodology_1991}, \cite{chow_new_2007})
+        The climate projections used for this study are 5 combinations of global climate models (GCM) and regional climate models (RCM) from the French Explore2 project (\cite{sauquet_explore2_2021}). All the combinations are listed in the \ref{tab:climate_models}. These were chosen because they presented both temperature projections and solar radiation data. The climate projections were calibrated using the CDFt method (\cite{vrac_cdft_2009}, \cite{lavaysse_statistical_2012}).\\
+
+        \begin{table}[ht]
+            \caption{\label{tab:climate_models} The Explore2 simulations used in this study.}
+            \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lllll}
+            \toprule
+            No. & GCM & RCM  \\
+            \midrule
+            1   & CNRM-CERFACS-CNRM-CM5 (\cite{voldoire_cnrm-cm51_2013}) & CNRM-ALADIN63 (\cite{nabat_modulation_2020}) \\
+            2   & CNRM-CERFACS-CNRM-CM5 (\cite{voldoire_cnrm-cm51_2013}) & MOHC-HadREM3-GA7-07 \\
+            3   & ICHEC-EC-EARTH (\cite{hazeleger_ec-earth_2012}) & KNMI-RACMO22E (\cite{van_meijgaard_knmi_2008})\\
+            4   & ICHEC-EC-EARTH (\cite{hazeleger_ec-earth_2012}) & MOHC-HadREM3-GA7-05 \\
+            5   & MOHC-HadGEM2-ES (\cite{collins_development_2011}) & MOHC-HadREM3-GA7-05 \\
+            \bottomrule
+            \end{tabular}
+            }
+        \end{table}
+
+        However, climate data is available on a daily time scale. It is therefore necessary to reconstruct intraday meteorological records. For temperature, the Sin(14R-1) method, an adaptation of the CIBSE method (\cite{petherbridge_weather_1983}, \cite{chow_new_2007}), was used. This method reconstructs hourly temperature data from daily minimum and maximum temperature data. The extreme temperature values are set at sunrise and 3 PM respectively (the details and justification are available in Appendix \ref{sub:details_and_justification_of_sin}). The temperatures at the intermediate times are then the result of a sinusoidal interpolation between the minimum and maximum values, as described in equation \eqref{eq:sin14r1}.
+
+        \begin{equation}\label{eq:sin14r1}
+             T(t_i) = \frac{T(t_\mathrm{next})-T(t_\mathrm{prev})}{2} - \left(\frac{T(t_\mathrm{next})-T(t_\mathrm{prev})}{2} \times \cos\left(\frac{\pi\left(t-t_\mathrm{prev}\right)}{t_\mathrm{next}-t_\mathrm{prev}}\right)\right)
+        \end{equation} 
+
+        \noindent
+        With,
+        $$
+        \begin{dcases}
+            T&\text{: External temperature}\\
+            t_i&\text{: time step $i$}\\
+            t_\mathrm{prev}&\text{: previous time step where T is defined}\\
+            t_\mathrm{next}&\text{: next time step where T is defined}\\
+        \end{dcases}
+        $$
+
+        By applying this method to the reanalysis data, one can determine the error of this method. The average error is \SI{0.1}{\celsius} and the RMSE \eqref{eq:rmse} is \SI{1.5}{\celsius}, over the period 2000-2020. (Appendix \ref{sub:details_and_justification_of_sin}). \\
+
+        For horizontal solar radiation on an hourly time step, the relationship between the altitude of the sun and global horizontal radiation is used, followed by calibration of the modelled daily mean value to the daily meteorological data, including a corrective factor (Appendix \ref{sub:details_and_justification_of_sin}).
+
+        \begin{equation}\label{eq:solar_eq}
+             S(t_i) = \left(1.09~\frac{\bar{S_d}}{1/24\times\sum_{t_i \in d} \cos\left(\pi/2-\alpha(t_i)\right)} \times \cos\left(\frac{\pi}{2}-\alpha(t_i)\right)\right)^+
+        \end{equation} 
+
+        \noindent
+        With,
+        $$
+        \begin{dcases}
+            S&\text{: Global horizontal radiation at time step $t_i$ of day $d$}\\
+            \bar{S_d}&\text{: Daily mean of global radiation}\\
+            \alpha&\text{: Sun altitude (in radians)}\\
+            (\cdot)^+&\text{: Positive part function}\\
+        \end{dcases}
+        $$
+
+        Finally, the distribution of global radiation between direct and diffuse radiation is assumed to be constant, in the absence of additional information in the projection data. In past ERA5 data, the average ratio between direct and global radiation is \num{0.749}. (Appendix \ref{sub:details_and_justification_of_sin}). 
+
+        \paragraph{Definition of global warming periods}\mbox{}\\ % (fold)
+        \label{par:gw_periods}
+
+        For this study, and to measure the effects of the global warming at different amplitudes, three reference periods are used:
+        \begin{itemize}
+            \item Current period: 2000-2020
+            \item +\SI{2}{\celsius} global warming
+            \item +\SI{4}{\celsius} global warming
+        \end{itemize}
+        To identify the absolute annual mean temperatures corresponding to the +2 and +\SI{4}{\celsius} periods, one can use the data available via the IPCC interactive atlas (\cite{ipcc_climate_2021}, \cite{iturbide_implementation_2022}) and by exporting the Euro-CORDEX (\cite{jacob_euro-cordex_2014}) dataset corresponding to the two levels of warming. The +2 period corresponds to the average of 47 climate models and the +4 period 39 models. By applying a mask over mainland France, we obtain the average annual temperatures in France for these two levels of warming, \SI{11.4}{\celsius} and \SI{13.3}{\celsius} respectively (\ref{fig:gw24}).\\
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.49\columnwidth]{figures/mean_yearly_temperature_france_gw2deg.png}
+            \includegraphics[width=0.49\columnwidth]{figures/mean_yearly_temperature_france_gw4deg.png}
+            \caption{\label{fig:gw24} Mean yearly temperature over mainland France for +\SI{2}{\celsius} and +\SI{4}{\celsius} of global warming.}
+            % \begin{quote}
+            %     \vspace{-2mm}
+            %     \small\noindent
+            %     \textbf{(left to right)} Description.  
+            %   \end{quote}
+        \end{figure}
+
+        These warming temperatures, in the framework of RCP8.5, do not correspond to the same time period for all the climate models used in this study (\ref{tab:climate_models}), because each model has its own dynamics (Appendix \ref{sub:projected_temperature_and_solar_radiation_data}). Thus, the time periods associated with the warming levels of each model are summarised in the \ref{tab:climate_periods}. 
+
+        \begin{table}[ht]
+            \centering
+            \caption{\label{tab:climate_periods} Temporal periods of global warming levels for the different climate models.}
+            % \resizebox{\columnwidth}{!}{
+            \small
+            \begin{tabular}{ccc}
+                \toprule
+                Climate model no. & +\SI{2}{\celsius} & +\SI{4}{\celsius} \\
+                \midrule
+                1 & 2029 -- 2049 & 2064 -- 2084 \\
+                2 & 2018 -- 2038 & 2056 -- 2076 \\
+                3 & 2024 -- 2044 & 2066 -- 2086 \\
+                4 & 2013 -- 2033 & 2056 -- 2076 \\
+                5 & 2004 -- 2024 & 2046 -- 2066 \\
+                \bottomrule
+                \end{tabular}
+            % }
+            \begin{quote}
+                % \vspace{-2mm}
+                \small\noindent
+                The periods were identified on the basis of the 20-year rolling average of the annual mean temperature records from each of the climate models. In the case of model no. 4, the period corresponding to +\SI{2}{\celsius} is very close to the reference period, which limits the differences between the current (reference) period and the effects of global warming at +\SI{2}{\celsius}.
+            \end{quote}
+        \end{table}
+
         % subsubsection historical_data (end)
 
         \subsubsection{French climate zones} % (fold)
         \label{ssub:french_climate_zones}
 
-        utilisation des zones climatiques françaises : limiter les calculs, la complexite, mais aussi s'inscrire dans les politiuqes de renovations qui les utilisent (CEE (\cite{ademe_french_2011}), MPR (\cite{anah_aides_2024}))
+        To limit the number of different meteorological chronicles, but still be able to represent the diversity of climates in mainland France, we are basing the study on the 8 French climate zones. This choice also allows us to fit in with the various public policy systems for monitoring and subsidising thermal renovations in France (\cite{anah_aides_2024}). Whether white certificates (\cite{ademe_french_2011}) or energy performance certificates (\cite{ministere_de_la_transition_ecologique_methode_2021}), the underlying methods take into account the climate zone in which the building is located. \\
 
-        definitions des prefecture centrales (\ref{fig:zcl})
+        For the sake of simplicity, we do not calculate the population-weighted average chronicles of each climate region for each of the meteorological variables (\cite{cros_comparative_2025}). Instead, we consider the central prefecture of the climate region (\ref{fig:zcl}), i.e. the prefecture of the department closest to the geographical centre of the climate region \eqref{eq:pref_centr}. All the climate variables are then identified at the coordinates of this central prefecture. 
+
         \begin{equation}
             \label{eq:pref_centr}
             p_c = \arg \min_{d \in \mathbf{d}_c} \left(\|\mathbf{c}_c - \mathbf{c}_{dp}\|_2 \right)
@@ -522,8 +665,29 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \subsubsection{Standard weather data} % (fold)
         \label{ssub:standard_weather_data}
         
-        pour economiser en temps de calcul, a chaque fois ets auf mention contraire, une année moyenne des périodes, définies tel que
-        % subsubsection standard_weather_data (end)
+        The inter-annual variability of meteorological data makes the calculation of energy needs for a given building very sensitive. To compensate for this, the French statistics services propose to provide climate-corrected energy consumption figures (\cite{sdes_bilan_2023}). This makes it possible to measure the effect of thermal renovations alone, dissociated from the effects of meteorological variations from one year to the next. However, in the case of this study, we specifically want to look at the interaction between renovations and climate change. The most intuitive way of taking annual variability into account is to carry out several years of energy simulations in order to observe the distribution of needs and their inter-annual variations. This method is costly in terms of calculation time.\\
+
+        To divide the calculation time by 20 (the number of years per climate period), it is possible to create an annual meteorological record representative of the entire time period under consideration. This is called a typical meteorological year (TMY) (\cite{wilcox_users_2008}), and its calculation is based on the Sandia method (\cite{hall_generation_1978}).\\
+
+        The method consists in aggregating the months closest to the monthly cumulative distribution function (CDF) over the entire reference period. Proximity to the general CDF is measured using Finkelstein-Schafer statistics $\mathrm{FS}$ (\cite{finkelstein_improved_1971}) for each meteorological variable. Then aggregated by weighted sum ($\mathrm{WS}$) over all the meteorological parameters. The weightings are adapted from the official method for the variables considered in this study (\cite{wilcox_users_2008}). Thus, the weight of solar radiation is 1/2, that of the mean daily temperature is 1/4 and those of the minimum and maximum daily temperatures are 1/8.  Then, the different months are ranked according to $\mathrm{WS}$ and for each month of the year, the closest is selected. These 12 months of data are then concatenated and the month interfaces are smoothed over 6 hours using a rolling average. 
+
+        \begin{subequations}
+            \begin{empheq}[left=\empheqlbrace]{align}
+                \mathrm{FS}_{i}^m &= |\mathrm{CDF}^{m,\mathrm{lt}}_{i}-\mathrm{CDF}^m_{i}|\label{eq:FS}\\
+                \mathrm{WS}^m &= \sum_{i} w_{i}\mathrm{FS}_{i}^m\label{eq:WS}
+            \end{empheq}
+        \end{subequations}
+        With,
+        $$
+        \begin{dcases}
+            \mathrm{FS}_{i}^m&\text{: Finkelstein-Schafer statistics of month $m$ and climate variable $i$}\\
+            \mathrm{CDF}^{m,\mathrm{lt}}_{i}&\text{: Long-term CDF of month $m$ and climate variable $i$}\\
+            \mathrm{CDF}^m_{i}&\text{: CDF of month $m$ and climate variable $i$}\\
+            \mathrm{WS}^m&\text{: Weighted sum of month $m$}\\
+            w_{i}&\text{: Climate variables weights}\\
+        \end{dcases}
+        $$
+        
     
     % subsection weather_data (end)
 
@@ -839,41 +1003,41 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
     % subsection optimal_economic_efficiency (end)
 % section opti (end)
 
-\clearpage
-\section{Generalisation across the whole French building stock}
-\label{sec:generalisation}
+% \clearpage
+% \section{Generalisation across the whole French building stock}
+% \label{sec:generalisation}
     
-    \subsection{Building stock calibration} % (fold)
-    \label{sub:calibration}
+%     \subsection{Building stock calibration} % (fold)
+%     \label{sub:calibration}
     
-    utilisation de la base DPE (statistiques)
+%     utilisation de la base DPE (statistiques)
 
-    description de la représentatitivté de la base DPE (BDNB) (\ref{fig:epc})
+%     description de la représentatitivté de la base DPE (BDNB) (\ref{fig:epc})
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.32\columnwidth]{figures/carte_repr_maison_dpe_nblog-BDNB.png}
-        \includegraphics[width=0.32\columnwidth]{figures/carte_repr_appartement_dpe_nblog-BDNB.png}
-        \includegraphics[width=0.32\columnwidth]{figures/DPE_distribution_dpe_france.png}
-        \caption{\label{fig:epc} Representativeness of EPC data in terms of number of dwellings and in energy performance labels.}
-        \begin{quote}
-            \vspace{-2mm}
-            \small\noindent
-            \textbf{(left to right)} Representativeness maps for single-family homes (SFH + TH) and multi-family homes (MFH + AB), and comparison of the distribution of energy performance labels in France (\cite{onre_parc_2022}) and in the BDNB database. Data from the BDNB (\cite{cstb_base_2024}), version 2023-11-a, aggregating data from the DPE database and the property database (\cite{ademe_donnees_2024}, \cite{cerema_documentation_2024}). 
-        \end{quote}
-    \end{figure}
-    % subsection calibration (end)
+%     \begin{figure}[ht]
+%         \centering
+%         \includegraphics[width=0.32\columnwidth]{figures/carte_repr_maison_dpe_nblog-BDNB.png}
+%         \includegraphics[width=0.32\columnwidth]{figures/carte_repr_appartement_dpe_nblog-BDNB.png}
+%         \includegraphics[width=0.32\columnwidth]{figures/DPE_distribution_dpe_france.png}
+%         \caption{\label{fig:epc} Representativeness of EPC data in terms of number of dwellings and in energy performance labels.}
+%         \begin{quote}
+%             \vspace{-2mm}
+%             \small\noindent
+%             \textbf{(left to right)} Representativeness maps for single-family homes (SFH + TH) and multi-family homes (MFH + AB), and comparison of the distribution of energy performance labels in France (\cite{onre_parc_2022}) and in the BDNB database. Data from the BDNB (\cite{cstb_base_2024}), version 2023-11-a, aggregating data from the DPE database and the property database (\cite{ademe_donnees_2024}, \cite{cerema_documentation_2024}). 
+%         \end{quote}
+%     \end{figure}
+%     % subsection calibration (end)
 
-    \subsection{Projection of heating and cooling needs} % (fold)
-    \label{sub:evolution_des_besoins_énergétiques}
+%     \subsection{Projection of heating and cooling needs} % (fold)
+%     \label{sub:evolution_des_besoins_énergétiques}
     
-    % subsection evolution_des_besoins_énergétiques (end)
+%     % subsection evolution_des_besoins_énergétiques (end)
 
-    \subsection{Projection of annual and instant energy demand} % (fold)
-    \label{sub:évoltuion_des_consommations}
+%     \subsection{Projection of annual and instant energy demand} % (fold)
+%     \label{sub:évoltuion_des_consommations}
     
-    % subsection évoltuion_des_consommations (end)
-% section generalisation (end)
+%     % subsection évoltuion_des_consommations (end)
+% % section generalisation (end)
 
 \clearpage
 \section{Discussion}
@@ -906,11 +1070,59 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
     \label{sub:u_values_comparison_with_tabula_typologies}
     
     % subsection u_values_comparison_with_tabula_typologies (end)
+
+    \subsection{Comparison between Météo-France observation and ERA5 reanalysis} % (fold)
+    \label{sub:comparison_between_mf_observation_and_era5_reanalysis_data}
     
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.49\columnwidth]{figures/comparison_TM_MF_ERA5.png}
+        \includegraphics[width=0.49\columnwidth]{figures/comparison_GLOT_MF_ERA5.png}
+        \caption{\label{fig:comparison_mf} Comparison of mean temperature and global radiation between ERA5 reanalysis and Météo-France observations.}
+        \begin{quote}
+            \vspace{-2mm}
+            \small\noindent
+            \textbf{(left to right)} Versus plot of the monthly average of the daily mean of maximum (TX) and minimum (TN) daily temperatures for climatic regions H1b and H3, the coldest and warmest regions respectively in mainland France. Versus plot of monthly cumulative daily horizontal solar radiation. The time periods shown in the legend correspond to the time range available for the weather station closest to the location defined for the climate region 
+          \end{quote}
+    \end{figure}
+
+    % subsection comparison_between_météo_france_observation_and_era5_reanalysis_data (end)
+
+    \subsection{Projected temperature and solar radiation data} % (fold)
+    \label{sub:projected_temperature_and_solar_radiation_data}
+    
+    % subsection projected_temperature_and_solar_radiation_data (end)
+
+    \subsection{Hourly weather data construction and validation} % (fold)
+    \label{sub:details_and_justification_of_sin}
+    
+    % subsection details_and_justification_of_sin (end)
+    
+
     \subsection{Single renovation actions on initial typologies} % (fold)
     \label{sub:single_renovation_actions_on_initial_typologies}
     
     % subsection single_renovation_actions_on_initial_typologies (end)
+
+    \subsection{Sensitivity analysis} % (fold)
+    \label{sub:sensitivity_analysis}
+        
+        \subsubsection{Internal set-point temperature} % (fold)
+        \label{ssub:internal_set_point_temperature}
+        
+        % subsubsection internal_set_point_temperature (end)
+
+        \subsubsection{External temperature} % (fold)
+        \label{ssub:external_temperature}
+        
+        % subsubsection external_temperature (end)
+
+        \subsubsection{Global solar radiation} % (fold)
+        \label{ssub:global_solar_radiation}
+        
+        % subsubsection global_solar_radiation (end)
+
+    % subsection sensitivity_analysis (end)
 
 % section appendix (end)
 
