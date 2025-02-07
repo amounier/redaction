@@ -195,6 +195,7 @@ rentabilité et cout des renovations (\cite{ademe_renovation_2019}, \cite{i4ce_t
 
 critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif_2024}, \cite{coulaud_maprimerenov_2024}, \cite{anah_aides_2024-1}, \cite{dagostino_impact_2024})
 
+
 \clearpage
 \section{RC analogy modelling}
 \label{sec:rc}
@@ -205,32 +206,63 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \subsubsection{RC analogy} % (fold)
         \label{ssub:rc_analogy}
 
+        In the 19\textsuperscript{th} century, the idea emerged that \enquote{electricity behaves like heat} (\cite{bolmont_evolution_2003}). The laws of heat were well known by then, thanks in particular to the work of Fourier (\cite{fourier_theorie_1822}). Ohm developed the analogy and formalised it to create his first laws on the behaviour of electricity (\cite{ohm_galvanische_1827}). Although the justification of the analogy is more delicate for the concepts of thermal capacity and electrical capacity, the equivalences of the physical quantities can be summarised in \ref{tab:analogyrc} (\cite{bolmont_evolution_2003}). Finally, it is possible to apply this analogy in the other way round and model a building as an electrical network in order to use the Kirchhoff's circuit laws and easily model variations in temperature and heat flow. \\
 
-        \cite{fourier_theorie_1822}, \cite{ohm_galvanische_1827}, \cite{bolmont_evolution_2003}
+        \begin{table}[ht]
+          \centering
+          \caption{\label{tab:analogyrc} Table of thermal-electrical analogies.}
+          \begin{tabular}{lcl}
+            \toprule
+            Heat & & Electricity\\
+            \midrule
+            Temperature difference & $\leftrightarrow$ & Voltage potential\\
+            Heat flow & $\leftrightarrow$ & Electric current\\
+            Thermal resistance & $\leftrightarrow$ & Electrical resistance\\
+            Thermal capacity & $\leftrightarrow$ & Electrical capacity\\
+            \bottomrule
+          \end{tabular}
+        \end{table}
+
+        Utilisation simplifiée (\cite{fraisse_development_2002}, \cite{rouchier_solving_2018}, \cite{iso_iso_2006})
+
+        Augmentation du niveau de détail : \cite{bacher_identifying_2011}, connections de RC simple pour faire du multi zone (\cite{belazi_thermal_2022}) puis utilisation détaillée (\cite{wang_development_2019})\\
+
+        Limites de la méthode : utilisation comme modèle paramétrique calibré sur des consommations réelles normalement. Ici : typologies abstraites de bâtiments donc pas de consommation réelle mais modélisation de consommations conventionnelle dans tous les cas et analyse en relatif à une consommation initiale. 
         
         % subsubsection rc_analogy (end)
 
-        \subsubsection{Model construction} % (fold)
+        \subsubsection{Model construction and resolution} % (fold)
         \label{ssub:model_construction}
 
-        \paragraph{Simplified RC model}\mbox{}\\ % (fold)
+        \paragraph{Simplified RC model for illustration}\mbox{}\\ % (fold)
         \label{par:simplified_rc_model}
 
-        À but illustratif (\ref{fig:RClight})
+        In order to illustrate and explain the computation and resolution methods used in this study, we detail the solving in the context of a simplified RC model, inspired by examples proposed in the literature (\cite{madsen_estimation_1995}, \cite{bacher_identifying_2011}, \cite{rouchier_solving_2018}). This model considers only two thermal inertias, that of the wall and that of the indoor air. The internal heat sources are internal heat gains (heating system) and internal solar radiation coming through the window. In this example, solar radiation reaching the external facade are not considered. Finally, we consider three thermal resistances: two for the wall (outside and inside) and one for the window. The modelled temperatures are the external temperature, the wall internal temperature and the internal temperature. \ref{fig:RClight} illustrates this example and shows the equivalent RC diagram. 
 
         \begin{figure}[ht]
             \centering
-            \includegraphics[width=0.33\columnwidth]{figures/building.drawio.png}
-            \includegraphics[width=0.66\columnwidth]{figures/R3C2.pdf}
+            \includegraphics[width=0.49\columnwidth]{figures/R3C2_diagram.drawio.png}
+            \includegraphics[width=0.49\columnwidth]{figures/R3C2.pdf}
             \caption{\label{fig:RClight} Diagram of a building and the associated simplified RC model}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                Description.
-            \end{quote}
+            % \begin{quote}
+            %     \vspace{-2mm}
+            %     \small\noindent
+            %     The diagram and the nspired from \textcite{madsen_estimation_1995}.
+            % \end{quote}
          \end{figure}
 
-        The RC model shown in the \ref{fig:RClight} provides a synthetic representation of the general model described below (\ref{par:general_rc_model}). The various thermal and energy variables represented are as follows:
+        By applying Kirchhoff's circuit laws to our simplified model, the following two-equation system \eqref{eq:eq1rclight} is obtained: 
+        % The RC model shown in the \ref{fig:RClight} provides a simplified representation of the general model described below (\ref{par:general_rc_model}). The various thermal and energy variables represented are as follows:
+
+        \begin{subequations}\label{eq:eq1rclight}
+            \begin{empheq}[left=\empheqlbrace]{align}
+            C_1\frac{\mathrm{d}T_w}{\mathrm{d}t} &= \frac{1}{R_1}(T_e-T_w) - \frac{1}{R_2}(T_w-T_i)\\
+            C_2\frac{\mathrm{d}T_i}{\mathrm{d}t} &= \Phi_{s,\mathrm{int}} + q + \frac{1}{R_2}(T_w-T_i) + \frac{1}{R_3}(T_e-T_i)
+            \end{empheq}            
+        \end{subequations}
+
+        \noindent
+        With,
         $$
         \begin{dcases}
           T_e&:\text{ External temprature (\SI{}{\celsius})} \\
@@ -243,15 +275,8 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \end{dcases}
         $$
 
-        \begin{subequations}\label{eq:eq1rclight}
-            \begin{empheq}[left=\empheqlbrace]{align}
-            C_1\frac{\mathrm{d}T_w}{\mathrm{d}t} &= \frac{1}{R_1}(T_e-T_w) - \frac{1}{R_2}(T_w-T_i)\\
-            C_2\frac{\mathrm{d}T_i}{\mathrm{d}t} &= \Phi_{s,\mathrm{int}} + q + \frac{1}{R_2}(T_w-T_i) + \frac{1}{R_3}(T_e-T_i)
-            \end{empheq}            
-        \end{subequations}
-
+        The system of equations can then be rewritten in matrix form \eqref{eq:matrix}, which is referred to as the state equation. Where $\mathbf{x}$ is the vector of inertial temperatures and $\mathbf{u}$ is the vector of heat source variables. 
         \begin{equation}\label{eq:matrix}
-        \Leftrightarrow \quad
           \frac{\mathrm{d}}{\mathrm{d}t}\left(\begin{bmatrix}
             T_i\\
             T_w
@@ -268,14 +293,59 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             q
           \end{bmatrix}}_{\mathbf{u}}
         \end{equation}
+        \noindent
+        Where
+        $$
+        \mathbb{A}  = \begin{bmatrix}
+            -\frac{1}{R_2 C_2} - \frac{1}{R_3 C_2} & \frac{1}{R_2 C_2}\\
+            \frac{1}{R_2 C_1} & -\frac{1}{R_1 C_1} - \frac{1}{R_2 C_1}\\
+          \end{bmatrix}
+        \quad\text{and}\quad
+        \mathbb{B}  = \begin{bmatrix}
+            \frac{1}{R_3 C_2} & \frac{1}{C_2} & \frac{1}{C_2}\\
+            \frac{1}{R_1 C_1}  & 0 & 0\\
+          \end{bmatrix}
+        $$
 
+        The time domain is then discretised into a succession of moments separated by a time step $\delta$. If and only if the matrices $\mathbb{A}$ and $\mathbb{B}$ are constant over time, the vector of inertial temperatures $\mathbf{x}$ at time $t+\delta$ can be written as (\cite{brogan_modern_1991}):
+        \begin{equation}\label{eq:xtdelta}
+            \mathbf{x}_{t+\delta} = \exp\left(\mathbb{A}\delta\right)\mathbf{x}_{t} + \int_t^{t+\delta} \exp\left(\mathbb{A}(t+\delta-\tau)\right) \mathbb{B}\mathbf{u}(\tau)\mathrm{d}\tau
+        \end{equation}
+        
+        \noindent
+        With
+        $$
+        \begin{dcases}
+          \exp \mathbb{A}= \sum_{k=0}^\infty \frac{1}{k!}\mathbb{A}^k\\
+          \mathbf{u}(\tau)= \mathbf{u}_t + \frac{\tau-t}{\delta}\left(\mathbf{u}_{t+\delta}-\mathbf{u}_t\right)\\
+        \end{dcases}
+        $$
+
+        With a sufficiently small time step $\delta$ and a sufficiently gently varying $\mathbf{u}$ vector, it is possible to neglect the second term in the expression of $\mathbf{u}(\tau)$. In this case, equation \eqref{eq:xtdelta} can be rewritten as (\cite{seem_transfer_1989}, \cite{madsen_estimation_1995}): 
+        \begin{equation}\label{eq:xtfg}
+            \mathbf{x}_{t+\delta} = \mathbb{F}\cdot\mathbf{x}_{t} + \mathbb{G}\cdot\mathbf{u}_{t}
+        \end{equation}
+        
+        \noindent
+        With
+        $$
+        \begin{dcases}
+          \mathbb{F} = \exp\left(\mathbb{A}\delta\right)\\
+          \mathbb{G}= \mathbb{A}^{-1}\left(\mathbb{F}-\mathbb{I}\right)\mathbb{B}&\text{, with $\mathbb{I}$ the identity matrix}\\
+        \end{dcases}
+        $$
+
+        This integration method makes the temperature calculation at each time step very inexpensive in terms of computation time. The most costly step is the computation of the $\mathbb{F}$ and $\mathbb{G}$ matrices, which is performed only once at the beginning of the resolution because the $\mathbb{A}$ and $\mathbb{B}$ matrices are constant over time. Therefore, all time-dependent variables (such as solar radiation and heat flow due to ventilation) must be included in the $\mathbf{u}$ vector. 
+        
         
         % paragraph simplified_rc_model (end)
 
         \paragraph{General RC model}\mbox{}\\ % (fold)
         \label{par:general_rc_model}
         
-        (\ref{fig:rc_mod})
+        In the complete model, the thermal envelope of residential buildings is not modelled using a single wall. The building types used in this study (\ref{sub:tabula_typologies}) are represented by six different surfaces: the 4 walls (each with a different orientation), the roof and the floor. Only one thermal zone is considered per building, even for multi-family dwellings. Gains from solar radiation are taken into account on external walls and inside the building. All the resistances, inertias and sources of heat flow are shown in \ref{fig:rc_mod}.\\ 
+
+        Depending on the type of building, certain parts of the RC network may be short-circuited. This is the case when buildings do not have a basement or when attics are converted.
 
         \begin{figure}[ht]
             \centering
@@ -284,70 +354,63 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \begin{quote}
                 \vspace{-2mm}
                 \small\noindent
-                Description. il faut ajouter les noms des composants 
+                À refaire.
               \end{quote}
-        \end{figure}  
-
-
-        Vecteurs $\mathbf{x}$ des températures inertielles ($[10\times 1]$) et vecteur $\mathbf{u}$ des températures et flux variables ($[15\times 1]$)
-
-        \begin{equation}
-          \begin{dcases}
-            \mathbf{x} = [T_i, T_{w_0}, T_{w_1}, T_{w_2}, T_{w_3}, T_c, T_u, T_f, T_d, T_g]^\top \\
-            \mathbf{u} = [T_e, \phi_{sue}, \phi_{sui}, \phi_{sw_0e}, \phi_{sw_0i}, \phi_{sw_1e}, \phi_{sw_1i}, \phi_{sw_2e}, \phi_{sw_2i}, \phi_{sw_3e}, \phi_{sw_3i}, \phi_{hc}, \phi_{i}, \phi_{v\mathrm{meca}}, \phi_{v\mathrm{nat}}]^\top
-          \end{dcases}
-        \end{equation}
-
-        Matrices de calcul $\mathbb{A}$ ($[10\times 10]$) et $\mathbb{B}$ ($[10\times 15]$)
-          % \resizebox{\columnwidth}{!}{
-        % \resizebox{\columnwidth}{!}{$
-        \begin{equation}\label{eq:rcmatrix}
-        \mathbb{A} = 
-        \begin{bmatrix}
-          a_{00} & a_{01} & a_{02} & a_{03} & a_{04} & a_{05} &        & a_{07} &        &       \\
-          a_{10} & a_{11} &        &        &        &        &        &        &        &       \\
-          a_{20} &        & a_{22} &        &        &        &        &        &        &       \\
-          a_{30} &        &        & a_{33} &        &        &        &        &        &       \\
-          a_{40} &        &        &        & a_{44} &        &        &        &        &       \\
-          a_{50} &        &        &        &        & a_{55} & a_{56} &        &        &       \\
-                 &        &        &        &        & a_{65} & a_{66} &        &        &       \\
-          a_{70} &        &        &        &        &        &        & a_{77} & a_{78} & a_{79}\\
-                 &        &        &        &        &        &        & a_{87} & a_{88} & a_{89}\\
-                 &        &        &        &        &        &        & a_{97} & a_{98} & a_{99}\\
-        \end{bmatrix}
-        \end{equation}
-
-
-        \begin{equation}
-          \mathbb{B} = \begin{bmatrix}
-  b_{00} &        & b_{02} &        & b_{04} &        & b_{06} &        & b_{08} &        & b_{010}& b_{011}& b_{012}& b_{013}& b_{014}\\
-  b_{10} &        &        & b_{13} &        &        &        &        &        &        &        &        &        &        &       \\
-  b_{20} &        &        &        &        & b_{25} &        &        &        &        &        &        &        &        &       \\
-  b_{30} &        &        &        &        &        &        & b_{37} &        &        &        &        &        &        &       \\
-  b_{40} &        &        &        &        &        &        &        &        & b_{49} &        &        &        &        &       \\
-  b_{50} & b_{51} &        &        &        &        &        &        &        &        &        &        &        &        &       \\
-  b_{60} & b_{61} &        &        &        &        &        &        &        &        &        &        &        &        &       \\
-         &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
-         &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
-  b_{90} &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
-\end{bmatrix}
-        \end{equation}
+        \end{figure} 
 
 
         % paragraph general_rc_model (end)
+        % subsubsection model_construction (end)
+
+        \subsubsection{Modelling of physics phenomena} % (fold)
+        \label{ssub:model_computation}
+        
+            \paragraph{Thermal conduction}\mbox{}\\ % (fold)
+            \label{par:thermal_conduction}
+            
+            résistance thermique\\
+
+
+            cas des parois adiabatiques
+
+            % paragraph thermal_conduction (end)
+
+            \paragraph{Convective and radiative heat transfer}\mbox{}\\ % (fold)
+            \label{par:convective_and_radiative_heat_transfer}
+            
+            % paragraph convective_and_radiative_heat_transfer (end)
+
+            \paragraph{Thermal inertia}\mbox{}\\ % (fold)
+            \label{par:thermal_inertia}
+            
+            % paragraph thermal_inertia (end)
+
+            \paragraph{Natural and mechanical ventilation}\mbox{}\\ % (fold)
+            \label{par:natural_and_mechanical_ventilation}
+            
+            % paragraph natural_and_mechanical_ventilation (end)
+
+            \paragraph{External solar gains}\mbox{}\\ % (fold)
+            \label{par:external_solar_gains}
+            
+            % paragraph external_solar_gains (end)
+
 
             \paragraph{Internal solar gains}\mbox{}\\ % (fold)
             \label{par:internal_solar_gains}
 
+            Description des gains internes 
+
+            description des masquages solaires
             ajouter un schéma pour chacun des deux facteurs (\ref{fig:solar_mask_diagram})
 
                 \begin{figure}[ht]
                 \centering
                 
-                \includegraphics[width=0.32\columnwidth]{figures/solar_factor_direct.png}
-                \includegraphics[width=0.32\columnwidth]{figures/solar_factor_diffuse.png}
+                \includegraphics[width=0.32\columnwidth]{figures/solar_mask_direct.png}\hspace{1cm}
+                \includegraphics[width=0.32\columnwidth]{figures/solar_mask_diffuse.png}
                 
-                \caption{\label{fig:solar_mask_diagram} Diagram of solar masks.}
+                \caption{\label{fig:solar_mask_diagram} Diagram of solar masks in case of direct and diffuse radiation.}
                     \begin{quote}
                         \vspace{-2mm}
                         \small\noindent
@@ -379,15 +442,11 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                 \end{figure}  
             
             % paragraph internal_solar_gains (end)
-        
-        % subsubsection model_construction (end)
 
-        \subsubsection{Model computation} % (fold)
-        \label{ssub:model_computation}
-        
-        mathematiques derriere le calcul
-        \cite{madsen_estimation_1995}, \cite{rouchier_solving_2018}
-
+            \paragraph{Ground temperature} % (fold)
+            \label{par:ground_temperature}
+            
+            % paragraph ground_temperature (end)
         
         % subsubsection model_computation (end)
 
@@ -417,6 +476,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 
     % subsection rc_analogy_and_computation (end)
 
+    \clearpage
     \subsection{TABULA typologies} % (fold)
     \label{sub:tabula_typologies}
     
@@ -438,7 +498,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 
         \begin{figure}[ht]
             \centering
-            \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_buildings_ponderated.png}\\
+            % \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_buildings_ponderated.png}\\
             \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_households_ponderated.png}
             \caption{\label{fig:tab_stock} Distribution of TABULA typologies in the French building stock.}
             \begin{quote}
@@ -687,6 +747,8 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             w_{i}&\text{: Climate variables weights}\\
         \end{dcases}
         $$
+
+        Description des modèles et des TMY. 
         
     
     % subsection weather_data (end)
@@ -1060,6 +1122,55 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 \clearpage
 \section{Appendix} % (fold)
 \label{sec:appendix}
+    
+    \subsection{Computation matrices and vectors definitions} % (fold)
+    \label{sub:computation_matrices_and_vectors_definitions}
+    Vecteurs $\mathbf{x}$ des températures inertielles ($[10\times 1]$) et vecteur $\mathbf{u}$ des températures et flux variables ($[15\times 1]$)
+
+    \begin{equation}
+          \begin{dcases}
+            \mathbf{x} = [T_i, T_{w_0}, T_{w_1}, T_{w_2}, T_{w_3}, T_c, T_u, T_f, T_d, T_g]^\top \\
+            \mathbf{u} = [T_e, \phi_{sue}, \phi_{sui}, \phi_{sw_0e}, \phi_{sw_0i}, \phi_{sw_1e}, \phi_{sw_1i}, \phi_{sw_2e}, \phi_{sw_2i}, \phi_{sw_3e}, \phi_{sw_3i}, \phi_{hc}, \phi_{i}, \phi_{v\mathrm{meca}}, \phi_{v\mathrm{nat}}]^\top
+          \end{dcases}
+        \end{equation}
+
+        Matrices de calcul $\mathbb{A}$ ($[10\times 10]$) et $\mathbb{B}$ ($[10\times 15]$)
+          % \resizebox{\columnwidth}{!}{
+        % \resizebox{\columnwidth}{!}{$
+        \begin{equation}\label{eq:rcmatrix}
+        \mathbb{A} = 
+        \begin{bmatrix}
+          a_{00} & a_{01} & a_{02} & a_{03} & a_{04} & a_{05} &        & a_{07} &        &       \\
+          a_{10} & a_{11} &        &        &        &        &        &        &        &       \\
+          a_{20} &        & a_{22} &        &        &        &        &        &        &       \\
+          a_{30} &        &        & a_{33} &        &        &        &        &        &       \\
+          a_{40} &        &        &        & a_{44} &        &        &        &        &       \\
+          a_{50} &        &        &        &        & a_{55} & a_{56} &        &        &       \\
+                 &        &        &        &        & a_{65} & a_{66} &        &        &       \\
+          a_{70} &        &        &        &        &        &        & a_{77} & a_{78} & a_{79}\\
+                 &        &        &        &        &        &        & a_{87} & a_{88} & a_{89}\\
+                 &        &        &        &        &        &        & a_{97} & a_{98} & a_{99}\\
+        \end{bmatrix}
+        \end{equation}
+
+
+        \begin{equation}
+          \mathbb{B} = \begin{bmatrix}
+  b_{00} &        & b_{02} &        & b_{04} &        & b_{06} &        & b_{08} &        & b_{010}& b_{011}& b_{012}& b_{013}& b_{014}\\
+  b_{10} &        &        & b_{13} &        &        &        &        &        &        &        &        &        &        &       \\
+  b_{20} &        &        &        &        & b_{25} &        &        &        &        &        &        &        &        &       \\
+  b_{30} &        &        &        &        &        &        & b_{37} &        &        &        &        &        &        &       \\
+  b_{40} &        &        &        &        &        &        &        &        & b_{49} &        &        &        &        &       \\
+  b_{50} & b_{51} &        &        &        &        &        &        &        &        &        &        &        &        &       \\
+  b_{60} & b_{61} &        &        &        &        &        &        &        &        &        &        &        &        &       \\
+         &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
+         &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
+  b_{90} &        &        &        &        &        &        &        &        &        &        &        &        &        &       \\
+\end{bmatrix}
+        \end{equation}
+
+
+    % subsection computation_matrices_and_vectors_definitions (end)
 
     \subsection{Effects of time resolution on energy and power needs} % (fold)
     \label{sub:effects_of_time_resolution_on_energy_and_power_needs}
