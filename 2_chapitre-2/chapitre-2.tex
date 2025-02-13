@@ -574,10 +574,32 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \end{quote}
         \end{table}
 
+        % \begin{table}[ht]
+        %     \caption{\label{tab:rmse_safran_mf} Table of differences between SAFRAN reanalysis and Météo-France observation data (mean temperature and global radiation) for the 8 French climate zones.}
+        %     \resizebox{\columnwidth}{!}{
+        %     \begin{tabular}{lllcccccccc}
+        %     \toprule
+        %      &&& H1a & H1b & H1c & H2a & H2b & H2c & H2d & H3 \\
+            
+        %      &unit&& 2010-2023 & 1994-1999 & 2017-2023 & 2009-2023 & 2011-2023 & 1968-2023 & 2004-2017 & 2002-2011 \\
+        %     \midrule
+        %     MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.29 & 0.51 & 1.00 & 0.19 & 0.24 & 0.34 & 1.08 & 0.25 \\
+        %     &&$\mathrm{RMSE}$& 0.35 & 0.55 & 1.09 & 0.24 & 0.32 & 0.43 & 1.19 & 0.35 \\
+        %     GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$& 4.47 & 5.40 & 2.47 & 6.39 & 2.45 & 3.37 & 6.39 & 3.48 \\
+        %     &&$\mathrm{RMSE}$& 5.64 & 6.76 & 4.02 & 7.63 & 3.19 & 4.52 & 8.71 & 4.52 \\
+        %     \bottomrule
+        %     \end{tabular}}
+        %     \begin{quote}
+        %         \vspace{-2mm}
+        %         \small\noindent
+        %         The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
+        %     \end{quote}
+        % \end{table}
+
         \paragraph{Projection data}\mbox{}\\ % (fold)
         \label{par:proj_data}
 
-        The climate projections used for this study are 5 combinations of global climate models (GCM) and regional climate models (RCM) from the French Explore2 project (\cite{sauquet_explore2_2021}). All the combinations are listed in the \ref{tab:climate_models}. These were chosen because they presented both temperature projections and solar radiation data. The climate projections were calibrated using the CDFt method (\cite{vrac_cdft_2009}, \cite{lavaysse_statistical_2012}).\\
+        The climate projections used for this study are 5 combinations of global climate models (GCM) and regional climate models (RCM) from the French Explore2 project (\cite{sauquet_explore2_2021}) and r1i1p1 ensemble (\cite{taylor_cmip5_2010}). All the combinations are listed in the \ref{tab:climate_models}. These were chosen because they presented both temperature projections and solar radiation data. The climate projections were calibrated using the ADAMONT method (\cite{verfaillie_method_2017}).\\
 
         \begin{table}[ht]
             \caption{\label{tab:climate_models} The Explore2 simulations used in this study.}
