@@ -74,7 +74,7 @@
 \AtEveryCite{\color{CIRED_blue}}
 
 \addbibresource{/home/amounier/Documents/Bibliographie/bibliographie_bib.bib}
-\bibliography{biblatex-examples.bib}
+% \bibliography{biblatex-examples.bib}
 
 % All name in hyperlink (cite biblatex)
 \makeatletter
@@ -535,6 +535,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         
         Once the buildings and their physical and technical characteristics have been defined, the second parameter required for thermal modelling is the basic meteorological data. In this simplified RC model, only outdoor temperatures and direct and diffuse solar radiation are considered. In the more comprehensive building energy simulations, data on relative humidity, wind speed and direction and dew point temperature are also used (\cite{bhandari_evaluation_2012}).\\
 
+        {\color{red} à changer pour safran}
         Meteorological reanalysis data from the ERA5 project (\cite{hersbach_era5_2020}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The ERA5 reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_era5_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
 
         \begin{subequations}
@@ -705,6 +706,10 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \end{quote}
         \end{table}
 
+        The inter-annual variability of meteorological data makes the calculation of energy needs for a given building very sensitive. To compensate for this, the French statistics services propose to provide climate-corrected energy consumption figures (\cite{sdes_bilan_2023}). This makes it possible to measure the effect of thermal renovations alone, dissociated from the effects of meteorological variations from one year to the next. However, in the case of this study, we specifically want to look at the interaction between renovations and climate change. The most intuitive way of taking annual variability into account is to carry out several years of energy simulations in order to observe the distribution of needs and their inter-annual variations. \\
+
+        In building energy, the aim is usually to limit calculation time by reducing this meteorological period. It is possible to create an annual meteorological record representative of the entire time period under consideration. This is called a typical meteorological year (TMY) (\cite{wilcox_users_2008}), and its calculation is based on the Sandia method (\cite{hall_generation_1978}). In this study, we prefer to keep the 20 years of meteorological data in order to be able to characterise, in future analyses, the influences of future heat waves, which will be increasingly intense and frequent in the coming years (\cite{ouzeau_heat_2016}).
+
         % subsubsection historical_data (end)
 
         \subsubsection{French climate zones} % (fold)
@@ -744,33 +749,31 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         
         % subsubsection french_climate_zones (end)
 
-        \subsubsection{Standard weather data} % (fold)
-        \label{ssub:standard_weather_data}
+        % \subsubsection{Standard weather data} % (fold)
+        % \label{ssub:standard_weather_data}
         
-        The inter-annual variability of meteorological data makes the calculation of energy needs for a given building very sensitive. To compensate for this, the French statistics services propose to provide climate-corrected energy consumption figures (\cite{sdes_bilan_2023}). This makes it possible to measure the effect of thermal renovations alone, dissociated from the effects of meteorological variations from one year to the next. However, in the case of this study, we specifically want to look at the interaction between renovations and climate change. The most intuitive way of taking annual variability into account is to carry out several years of energy simulations in order to observe the distribution of needs and their inter-annual variations. This method is costly in terms of calculation time.\\
+        
 
-        To divide the calculation time by 20 (the number of years per climate period), it is possible to create an annual meteorological record representative of the entire time period under consideration. This is called a typical meteorological year (TMY) (\cite{wilcox_users_2008}), and its calculation is based on the Sandia method (\cite{hall_generation_1978}).\\
+        % The method consists in aggregating the months closest to the monthly cumulative distribution function (CDF) over the entire reference period. Proximity to the general CDF is measured using Finkelstein-Schafer statistics $\mathrm{FS}$ (\cite{finkelstein_improved_1971}) for each meteorological variable. Then aggregated by weighted sum ($\mathrm{WS}$) over all the meteorological parameters. The weightings are adapted from the official method for the variables considered in this study (\cite{wilcox_users_2008}). Thus, the weight of solar radiation is 1/2, that of the mean daily temperature is 1/4 and those of the minimum and maximum daily temperatures are 1/8.  Then, the different months are ranked according to $\mathrm{WS}$ and for each month of the year, the closest is selected. These 12 months of data are then concatenated and the month interfaces are smoothed over 6 hours using a rolling average. 
 
-        The method consists in aggregating the months closest to the monthly cumulative distribution function (CDF) over the entire reference period. Proximity to the general CDF is measured using Finkelstein-Schafer statistics $\mathrm{FS}$ (\cite{finkelstein_improved_1971}) for each meteorological variable. Then aggregated by weighted sum ($\mathrm{WS}$) over all the meteorological parameters. The weightings are adapted from the official method for the variables considered in this study (\cite{wilcox_users_2008}). Thus, the weight of solar radiation is 1/2, that of the mean daily temperature is 1/4 and those of the minimum and maximum daily temperatures are 1/8.  Then, the different months are ranked according to $\mathrm{WS}$ and for each month of the year, the closest is selected. These 12 months of data are then concatenated and the month interfaces are smoothed over 6 hours using a rolling average. 
+        % \begin{subequations}
+        %     \begin{empheq}[left=\empheqlbrace]{align}
+        %         \mathrm{FS}_{i}^m &= |\mathrm{CDF}^{m,\mathrm{lt}}_{i}-\mathrm{CDF}^m_{i}|\label{eq:FS}\\
+        %         \mathrm{WS}^m &= \sum_{i} w_{i}\mathrm{FS}_{i}^m\label{eq:WS}
+        %     \end{empheq}
+        % \end{subequations}
+        % With,
+        % $$
+        % \begin{dcases}
+        %     \mathrm{FS}_{i}^m&\text{: Finkelstein-Schafer statistics of month $m$ and climate variable $i$}\\
+        %     \mathrm{CDF}^{m,\mathrm{lt}}_{i}&\text{: Long-term CDF of month $m$ and climate variable $i$}\\
+        %     \mathrm{CDF}^m_{i}&\text{: CDF of month $m$ and climate variable $i$}\\
+        %     \mathrm{WS}^m&\text{: Weighted sum of month $m$}\\
+        %     w_{i}&\text{: Climate variables weights}\\
+        % \end{dcases}
+        % $$
 
-        \begin{subequations}
-            \begin{empheq}[left=\empheqlbrace]{align}
-                \mathrm{FS}_{i}^m &= |\mathrm{CDF}^{m,\mathrm{lt}}_{i}-\mathrm{CDF}^m_{i}|\label{eq:FS}\\
-                \mathrm{WS}^m &= \sum_{i} w_{i}\mathrm{FS}_{i}^m\label{eq:WS}
-            \end{empheq}
-        \end{subequations}
-        With,
-        $$
-        \begin{dcases}
-            \mathrm{FS}_{i}^m&\text{: Finkelstein-Schafer statistics of month $m$ and climate variable $i$}\\
-            \mathrm{CDF}^{m,\mathrm{lt}}_{i}&\text{: Long-term CDF of month $m$ and climate variable $i$}\\
-            \mathrm{CDF}^m_{i}&\text{: CDF of month $m$ and climate variable $i$}\\
-            \mathrm{WS}^m&\text{: Weighted sum of month $m$}\\
-            w_{i}&\text{: Climate variables weights}\\
-        \end{dcases}
-        $$
-
-        Description des modèles et des TMY. 
+        % Description des modèles et des TMY. 
         
     
     % subsection weather_data (end)
@@ -779,6 +782,79 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
     \label{sub:behaviour_definition}
 
 
+    To distinguish between consumption linked to the intrinsic qualities of the building and that attributable to the behaviour of its occupants, it is important to define a so-called conventional behaviour. This behaviour is derived from national thermal regulations (\cite{ministere_de_la_transition_ecologique_methode_2021-1}). Conventional behaviour defines: the set point temperature for heating and cooling, the internal power released by the occupants and their equipment, and the periods when windows are open (for the calculation of energy consumption).
+
+    \subsubsection{Set-point temperatures} % (fold)
+    \label{ssub:set_point_temperature}
+    
+    In the official Th-BCE method (\cite{ministere_de_la_transition_ecologique_methode_2021-1}), the set temperature for heating is 19°C when the occupants are present in the dwelling and 16°C otherwise. For cooling, the set temperature is 26°C when people are present and 30°C when they are not. The presence period is from 6~p.m. to 10~a.m. on all working days (except Wednesdays, when occupants are present from 1~p.m.). At weekends, it is assumed that occupants are present for the whole day. The evolution of set-point temperatures over a week is shown in \ref{fig:behav}.
+
+    % subsubsection set_point_temperature (end)
+
+    \subsubsection{Internal heat gains} % (fold)
+    \label{ssub:internal_heat_gains}
+    
+    To calculate the internal gains due to residents and their equipment, we distinguish between three elements: gains from lighting ($\Phi_{i,l}$), gains from equipment (excluding lighting) ($\Phi_{i,e}$) and gains from people ($\Phi_{i,p}$) \eqref{eq:Phi_i}. Internal gains depend on the time of day, distinguishing between the presence period ($P_p$) (\ref{ssub:set_point_temperature}) and the sleep period ($P_s$) (from 10~p.m. to 7~a.m.). All these gains are expressed in \SI{}{\watt}.
+
+    \begin{subequations}\label{eq:Phi_i}
+        \begin{empheq}[left=\empheqlbrace]{align}
+            \Phi_{i,l}(t) &= \label{eq:phi_il}\begin{cases}
+                1.4\times S & \text{ if } t \in P_p \text{ and } t \notin P_s\\
+                0 & \text{ else.}
+            \end{cases}\\
+            \Phi_{i,e}(t) &= \label{eq:phi_ie}\begin{cases}
+                5.7 \times S & \text{ if } t \in P_p \text{ and } t \notin P_s\\
+                1.1 \times S & \text{ else.}
+            \end{cases}\\
+            \Phi_{i,p}(t) &= \label{eq:phi_ip}\begin{cases}
+                90 \times N_{a,\mathrm{eq}}(S) & \text{ if } t \in P_p \text{ and } t \notin P_s\\
+                63 \times N_{a,\mathrm{eq}}(S) & \text{ if } t \in P_p \text{ and } t \in P_s\\
+                0 & \text{ else.}
+            \end{cases}
+        \end{empheq}
+    \end{subequations}
+
+    With $S$ the house surface and $N_{a,\mathrm{eq}}$ the number of equivalent adults in the household, function of house surface and building type ($t$). $N_{a,\mathrm{eq}}$ is defined in equation \eqref{eq:nae} and represented in function of the house surface in \ref{fig:behav}. Finally, the total internal gain $\Phi_i$ (\ref{fig:behav}) is the sum of the three gains defined above. 
+
+    \begin{subequations}\label{eq:nae}
+        \begin{empheq}[left=\empheqlbrace]{align}
+            N(S) &= 
+            \begin{cases}
+                \begin{cases}
+                    1 & \text{ if } S<30 \\
+                    1.75 - 0.01875 \times (70 - S) & \text{ if } S \in [30,70], \\
+                    0.025 \times S & \text{ if } S>70 
+                \end{cases} & \text{ if } t \in \{ \mathrm{SFH}, \mathrm{TH}\}\\
+                \begin{cases}
+                    1 & \text{ if } S<10 \\
+                    1.75 - 0.01875 \times (50 - S) & \text{ if } S \in [10,50], \\
+                    0.035 \times S & \text{ if } S>50 
+                \end{cases} & \text{ if } t \in \{ \mathrm{MFH}, \mathrm{AB}\}
+            \end{cases}\\ 
+            N_{a,\mathrm{eq}}(S) &= \begin{cases}
+                N(S) & \text{ if } N < 1.75\\
+                1.75 + 0.3 \times \left(N(S) - 1.75\right) & \text{ else.}
+            \end{cases}
+        \end{empheq}
+    \end{subequations}
+
+
+    % subsubsection internal_heat_gains (end)
+
+     \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.32\columnwidth]{figures/conventionnel_th-bce_2020_heating_cooling_rules.png}
+            \includegraphics[width=0.32\columnwidth]{figures/conventionnel_th-bce_2020_nb_adulte_eq.png}
+            \includegraphics[width=0.32\columnwidth]{figures/conventionnel_th-bce_2020_internal_gains_rules.png}
+            \caption{\label{fig:behav} Conventional behaviour definition graphs.}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                \textbf{(left to right)} . 
+                
+                 
+              \end{quote}
+        \end{figure}
     
     % subsection behaviour_definition (end)
 % section rc (end)
