@@ -107,6 +107,7 @@
 \DeclareSIUnit\watthour{Wh}
 \DeclareSIUnit\year{yr}
 \DeclareSIUnit\hab{inhab}
+\DeclareSIUnit\volume{V}
 
 %Options de largeur de marges, verticales et horizontales
 \geometry{hmargin=3cm,vmargin=2cm}
@@ -210,6 +211,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 
         \begin{table}[ht]
           \centering
+          \small
           \caption{\label{tab:analogyrc} Table of thermal-electrical analogies.}
           \begin{tabular}{lcl}
             \toprule
@@ -228,7 +230,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         Using these simplified models, it is possible to increase the number of electronic components to take into account more and more phenomena and different inertias, such as the inertia of heating systems ( \cite{bacher_identifying_2011}) or air infiltration (\cite{reynders_quality_2014}). Other researchers are even combining several simplified models to produce multi-zone modelling, enabling several different temperatures to be modelled within the building (\cite{belazi_thermal_2022}, \cite{vallianos_automatic_2022}, \cite{balali_energy_2023}). Finally, by combining the two aspects, other researchers have sought to represent as accurately as possible each component of the dwelling and the associated heat flows in order to obtain a detailed RC model (\cite{wang_development_2019}, \cite{cui_model_2022}). The modelling used here is intermediate, with a detailed RC model with a single thermal zone in the building, including multi-family dwellings. \\
 
         This last point introduces the limits of this method. In general, RC models are used as grey-box parametric models whose R and C values are the result of calibration on real measured temperatures and consumptions. Thus, at the end of the calibration, the physical interpretation of the parameter values is not guaranteed, depending on the structure of the RC network. In our case, we are applying RC models to building typologies which, by definition, have no actual consumption. It is therefore not possible to calibrate the parameters, and we use the RC model as a conventional physical model. It is therefore certain that the results obtained cannot be used to forecast real energy consumption on a building scale. In this study, we use the modelling results in relative terms for conventional energy needs, to compare the effects of one or more renovation actions on changes in heating and cooling needs.  
-        
+
         % subsubsection rc_analogy (end)
 
         \subsubsection{Model construction and resolution} % (fold)
@@ -296,7 +298,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
           \end{bmatrix}}_{\mathbf{u}}
         \end{equation}
         \noindent
-        Where
+        Where,
         $$
         \mathbb{A}  = \begin{bmatrix}
             -\frac{1}{R_2 C_2} - \frac{1}{R_3 C_2} & \frac{1}{R_2 C_2}\\
@@ -315,7 +317,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \end{equation}
         
         \noindent
-        With
+        With,
         $$
         \begin{dcases}
           \exp \mathbb{A}= \sum_{k=0}^\infty \frac{1}{k!}\mathbb{A}^k\\
@@ -329,7 +331,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \end{equation}
         
         \noindent
-        With
+        With,
         $$
         \begin{dcases}
           \mathbb{F} = \exp\left(\mathbb{A}\delta\right)\\
@@ -374,7 +376,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                 P_{c,\mathrm{max}}~\left(T_i-(T_{sc} - 1)\right)/2 & \text{ if } T_i \in \left]T_{sc} - 1, T_{sc} + 1\right]\\
                 P_{c,\mathrm{max}} & \text{ else.}
             \end{cases}\\
-            \Phi_{hc} &= \Phi_h + \Phi_c
+            \Phi_{hc} &= \Phi_h - \Phi_c
             \end{empheq}            
         \end{subequations}
 
@@ -384,44 +386,193 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \subsubsection{Modelling of physics phenomena} % (fold)
         \label{ssub:model_computation}
         
+            \paragraph{Materials}\mbox{}\\ % (fold)
+            \label{par:materials}
+            
+            To simplify the analysis, we consider only a small number of materials and use only three physical quantities: density, thermal conductivity and specific heat capacity. All the materials used are described in \ref{tab:materials} (\cite{ministere_de_la_transition_ecologique_regles_2017}, \cite{castagnede_tables_2020}, \cite{sassine_investigation_2022}).
+
+
+            \begin{table}[ht]
+            \centering
+            \caption{\label{tab:materials} Table of material characteristics.}
+            \small
+            % \resizebox{\columnwidth}{!}{
+            \begin{tabular}{llccc}
+                \toprule
+                & & Density & Thermal conductivity & Thermal capacity \\
+                & & (\SI{}{\kilo\gram\per\cubic\meter}) & (\SI{}{\watt\per\meter\kelvin}) & (\SI{}{\joule\per\kilo\gram\kelvin}) \\
+                \midrule
+                Structure & Wood & 600 & 0.150 & 1880 \\
+                 & Stone & 2300 & 1.350 & 1000 \\
+                 & Brick & 1650 & 0.640 & 1000 \\
+                 & Concrete & 2100 & 1.650 & 1000 \\
+                 & Breeze block & 1185 & 0.900 & 1080 \\
+                 & Cellular concrete & 550 & 0.200 & 1000 \\
+                 & Insulating brick & 700 & 0.250 & 900 \\
+                \midrule
+                Insulation & Polystyrene & 16 & 0.044 & 1450 \\
+                 & Mineral wool & 25 & 0.041 & 1030 \\
+                 & Vegetal wool & 90 & 0.078 & 1000 \\
+                \bottomrule
+                \end{tabular}
+            % }
+            % \begin{quote}
+            %     \vspace{-2mm}
+            %     \small\noindent
+            %     The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
+            % \end{quote}
+        \end{table}
+            % paragraph materials (end)
+
             \paragraph{Thermal conduction}\mbox{}\\ % (fold)
             \label{par:thermal_conduction}
             
-            résistance thermique\\
+            The first physical phenomenon to be represented is heat conduction through a homogeneous element of thickness $e$ and thermal conductivity $\lambda$, assuming one-dimensional transfer. The heat transfer area on either side of this surface is referred to as $S_d$ \eqref{eq:R_cond}.
 
+            \begin{equation}\label{eq:R_cond}
+                R = \frac{e}{\lambda S_d} \quad \text{in \SI{}{\kelvin\per\watt}}
+            \end{equation}
 
-            cas des parois adiabatiques
+            Other assumptions concerning thermal conduction are applied. Firstly, the existence of thermal bridges is only considered in the case of internal insulation. To avoid the complexity of calculating thermal bridges (\cite{mao_dynamic_1997}, \cite{martin_problems_2011}, \cite{ministere_de_la_transition_ecologique_regles_2017-1}), we use the same technique as in the TABULA project methodology: thermal bridges are simply included as a \SI{27}{\percent} reduction in the efficiency of internal insulation (\cite{pouget_consultants_batiments_2015}). Secondly, some walls are considered adiabatic in our model. This is the case for shared walls in the case of terraced houses and collective dwellings, where applicable. In this configuration, the solution implemented to maintain the same RC model and the same resolution is to replace the outdoor temperature with the indoor temperature at each resolution time step. 
 
             % paragraph thermal_conduction (end)
 
             \paragraph{Convective and radiative heat transfer}\mbox{}\\ % (fold)
             \label{par:convective_and_radiative_heat_transfer}
+
+            When a wall is in contact with the air, there is heat exchange in the form of convection and radiation (in the infra-red wavelengths). The radiative and convective exchange coefficients can then be written in the form of thermal resistances, which differ depending on whether the contact is outside or inside the envelope. In the interior case, the convective-radiative thermal resistance is described in equation 5, depends on the exchange surface $S_d$ and the direction of heat exchange (upward $\uparrow$, horizontal $\leftrightarrow$, downward $\downarrow$) (\cite{ministere_de_la_transition_ecologique_regles_2017-2}). 
+
+            \begin{equation}\label{eq:Rih_horiz}
+                R_{ih} = \frac{R_{si}}{S_d} \quad \text{in \SI{}{\kelvin\per\watt}, where}\quad
+                \begin{dcases}
+                    R_{si,\uparrow} = \SI{0.15}{\square\meter\kelvin\per\watt}\\
+                    R_{si,\leftrightarrow} = \SI{0.13}{\square\meter\kelvin\per\watt}\\
+                    R_{si,\downarrow} = \SI{0.17}{\square\meter\kelvin\per\watt}
+                \end{dcases}
+            \end{equation}
+
+            In the case of convective-radiative exchange towards the outside, the two phenomena are more clearly distinguished \eqref{eq:Reh}. The convective exchange coefficient ($h_c$) is a function of wind speed, which is assumed to be constant at \SI{5}{\meter\per\second}. And the radiative exchange coefficient ($h_r$) is a function of the average temperature of the environment, considered constant at \SI{10}{\celsius} or \SI{283.15}{\kelvin} (\cite{ministere_de_la_transition_ecologique_regles_2017-2}). Our method of resolution requires the resolution matrices to be constant over time, which means keeping the thermal resistance parameters constant. 
             
+            \begin{equation}\label{eq:Reh}
+                R_{eh} = \frac{1}{\left(h_c+h_r\right)\cdot S_d}\quad\text{with}\quad
+                \begin{dcases}
+                    h_c = 4 + 4\times w\\ 
+                    h_r = \varepsilon \times 4\sigma {T_{\mathrm{env}}}^3
+                \end{dcases}
+            \end{equation}
+
+            \noindent
+            With,
+            $$
+            \begin{dcases}
+                w &\text{, wind speed (\SI{}{\meter\per\second})}\\ 
+                T_{\mathrm{env}} &\text{, environment temperature (\SI{}{\kelvin})}\\ 
+                \varepsilon = 0.9 &\text{, corrected hemispheric emissivity}\\  
+                \sigma = \SI{5.67e-8}{\watt\per\square\meter\kelvin\tothe{4}} &\text{, Stefan-Boltzmann constant}\\  
+            \end{dcases}
+            $$
             % paragraph convective_and_radiative_heat_transfer (end)
 
             \paragraph{Thermal inertia}\mbox{}\\ % (fold)
             \label{par:thermal_inertia}
+
+            The thermal capacities of non-structural elements (windows, insulation, etc.) are assumed to be zero. Thus, only the inertias of the structural elements ($C_e$) for a given material and the internal air volumes ($C_a$) are considered and are expressed in $\SI{}{\joule\per\kelvin}$. The calculation of these two types of inertia is described in equation \eqref{eq:C}. 
+
+            \begin{subequations}\label{eq:C}
+                \begin{empheq}[left=\empheqlbrace]{align}
+                    C_e &= \rho c_p \times e \times S_d\\ 
+                    C_a &= \rho^{\mathrm{air}} c_{p}^\mathrm{air} V^\mathrm{air} 
+                \end{empheq}            
+            \end{subequations}
+
+            \noindent
+            With,
+            $$
+            \begin{dcases}
+                \rho &\text{: density (\SI{}{\kilo\gram\per\cubic\meter})}\\
+                c_p &\text{: specific thermal capacity (\SI{}{\joule\per\kilo\gram\kelvin}})\\
+                e &\text{: material thickness (\SI{}{\meter}})\\
+                S_d &\text{: heat loss surface (\SI{}{\square\meter}})\\
+                V^\mathrm{air} &\text{: air volume of building typology (\SI{}{\cubic\meter}})\\
+            \end{dcases}
+            $$
+
+            To the thermal capacity of the indoor air, we add 12 times this same capacity to take account of the thermal inertia of the internal walls and furniture (\cite{antonopoulos_envelope_1999}).
+             
             
             % paragraph thermal_inertia (end)
 
             \paragraph{Natural and mechanical ventilation}\mbox{}\\ % (fold)
             \label{par:natural_and_mechanical_ventilation}
             
+            In ventilation, three phenomena can be distinguished: infiltration of outside air, controlled mechanical ventilation and controlled natural ventilation (by opening windows). Of these elements, and in the context of this modelling, only infiltration can be represented as a thermal resistance (in \SI{}{\kelvin\per\watt}) directly linking the outside temperature to the inside temperature, as a function of the air flow rate \eqref{eq:infiltration} in proportion ($r_{inf}$) of house volume per hour (\SI{}{\per\hour}) (\cite{slama_rt_2016}). Four levels of infiltration can be distinguished: minimal (\SI{0.05}{\per\hour}), low (\SI{0.1}{\per\hour}), medium (\SI{0.2}{\per\hour}), and high (\SI{0.5}{\per\hour}). By default, and in the absence of sufficient data, all types are medium. 
+
+            \begin{equation}\label{eq:infiltration}
+                R_{inf} = \frac{3600}{\rho^\mathrm{air}c^\mathrm{air}\times r_{inf}V^\mathrm{air}}
+            \end{equation}
+
+
+            However, controlled (i.e. non-constant) ventilation cannot be modelled as resistance and is therefore considered as internal heat flow in the $\mathbf{u}$ vector \eqref{eq:xtfg}. The thermal flow of natural ventilation is due to the temperature difference between the indoor and outdoor air flows. The mass flow rate being itself a function of the temperature differential (\cite{ashrae_handbook_1997}, \cite{fracastoro_experimental_2002}) \eqref{eq:vent_nat_q}. The discharge coefficient ($C_d$) is considered here to be solely a function of the temperature differential \eqref{eq:vent_nat_c} and the influence of wind speed or the traversing aspect of the dwelling (\cite{ramponi_energy_2014}, \cite{schreck_ventilation_2024}) is neglected. The heat flow is therefore a function of the air mass flow rate \eqref{eq:vent_nat_phi}. Natural ventilation is only used for night-time over-ventilation when the indoor temperature is higher than the set-point cooling temperature and the outdoor temperature. Night-time over-ventilation is deactivated by default (unless otherwise stated) in order to quantify the total cooling needs, even if part of these needs can be met for free by opening the windows.  
+
+            
+            \begin{subequations}\label{eq:vent_nat}
+                \begin{empheq}[left=\empheqlbrace]{align}
+                    q^\mathrm{air} &= \rho^\mathrm{air}~ \frac{S_w}{2} ~ C_d ~ \sqrt{\frac{g\cdot h_w~ |T_i-T_e|}{2T_i}}\label{eq:vent_nat_q}\\ 
+                    C_d &= 0.4 + 0.0045\cdot|T_i-T_e|\label{eq:vent_nat_c}\\ 
+                    \Phi_{v,\mathrm{nat}} &= q^\mathrm{air}\cdot c_p^\mathrm{air} \left(T_e-T_i \right)\label{eq:vent_nat_phi}
+                \end{empheq}            
+            \end{subequations}
+
+            \noindent
+            With,
+            $$
+            \begin{dcases}
+                \rho^\mathrm{air} &\text{: Air density (\SI{1.2}{\kilo\gram\per\cubic\meter})}\\
+                c_p^\mathrm{air} &\text{: Air specific thermal capacity (\SI{1}{\kilo\joule\per\kilo\gram\kelvin})}\\
+                g &\text{: Gravitational acceleration (\SI{9.81}{\meter\per\square\second})}\\
+            \end{dcases}\quad\text{and}\quad
+            \begin{dcases}
+                S_w &\text{: Windows surface}\\
+                h_w &\text{: Windows height}\\
+                T_i &\text{: Internal temperature}\\
+                T_e &\text{: Outdoor temperature}\\
+            \end{dcases}
+            $$
+
+
+            In addition to natural ventilation, many dwellings have mechanical ventilation. In this case, a fixed flow rate is applied, corresponding to the ventilation obligations in French dwellings (\cite{jorf_arrete_1982}). This mass flow rate is then proportional to the surface area ($S$) of the dwelling \eqref{eq:vent_meca_q}, assuming an average room size of \SI{20}{\square\meter}. Depending on the type of ventilation system, the thermal efficiency varies, and this efficiency is translated as a reduction in the outside air flow entering the dwelling. For example, an airflow of \SI{2}{\kilo\gram\per\second} for an efficiency $\eta$ of 0.7 will be coded as an airflow of \SI{0.6}{\kilo\gram\per\second}. The different systems considered are: simple mechanical ventilation (MV, $\eta=0$), demand controlled ventilation (DCV, $\eta=0.2$), and heat recovery ventilation (HCV, $\eta=0.7$) (\cite{mardiana-idayu_review_2012}, \cite{zhang_novel_2021}). In the case of collective equipment, an efficiency bonus of 0.1 is applied (\cite{bergner_ventilation_2018}). The ventilation heat flow is then expressed in the same way as the heat flow from natural ventilation \eqref{eq:vent_meca_phi}. 
+
+            \begin{subequations}\label{eq:vent_meca}
+                \begin{empheq}[left=\empheqlbrace]{align}
+                    q^\mathrm{air} &= \frac{\rho^\mathrm{air}}{3600}~\left(24.3 + 0.8\times S\right)\label{eq:vent_meca_q}\\ 
+                    \Phi_{v,\mathrm{meca}} &= q^\mathrm{air}\cdot c_p^\mathrm{air} \left(T_e-T_i \right)~\left(1-\eta\right)\label{eq:vent_meca_phi}
+                \end{empheq}            
+            \end{subequations}
+
+            To avoid retaining too much heat in summer, ventilation systems are equipped with by-passes and can over ventilate at night. So when the inside temperature is higher than the set-point temperature and the outside temperature, the ventilation efficiency is set to 0 and the value of the air mass flow is doubled. 
+
             % paragraph natural_and_mechanical_ventilation (end)
 
             \paragraph{External solar gains}\mbox{}\\ % (fold)
             \label{par:external_solar_gains}
             
-            % paragraph external_solar_gains (end)
+            Solar radiation plays a very important role in building energy needs. Some solar rays enter the dwelling through the windows, but the majority of the solar radiation heats the external wall of the envelope. Incident solar radiation is separated into two components, which do not behave in the same way: direct solar radiation ($\Phi_{se,\mathrm{direct}}$) and diffuse solar radiation ($\Phi_{se,\mathrm{diffuse}}$). For each orientation of the building (the four directions plus the horizontal), we can calculate the solar power absorbed by the wall surface $S_e$. The proportion of radiation absorbed depends on the albedo of the wall: the closer the albedo is to 1, the less radiation the wall absorbs. In practice, we define four colours: light ($a=0.6$), medium ($a=0.4$), dark ($a=0.2$) and black ($a=0$). 
 
+            \begin{equation}\label{eq:phi_e}
+                \Phi_{se} = \left(m\times \Phi_{se,\mathrm{direct}} + \Phi_{se,\mathrm{diffuse}}\right)~ S_e\times a
+            \end{equation}
+
+            External masking $m$ blocks direct sunlight when the sun is at an altitude of less than \SI{10}{\degree}. This value may be too high in rural areas but too low in urban areas, and masking can vary greatly due to the proximity of buildings to each other or the presence of trees, etc. 
+            % paragraph external_solar_gains (end)
 
             \paragraph{Internal solar gains}\mbox{}\\ % (fold)
             \label{par:internal_solar_gains}
 
-            Description des gains internes 
+                In the same way, solar radiation penetrates the glazing (with a surface area $S_w$) of the different orientations and brings a thermal flux directly inside the dwelling. $m$ still represents the distant masking, to which we add the masking of solar protection $m_s$ \eqref{eq:phi_i} represented in \ref{fig:solar_mask_diagram}. 
 
-            description des masquages solaires
-            ajouter un schéma pour chacun des deux facteurs (\ref{fig:solar_mask_diagram})
+                \begin{equation}\label{eq:phi_i}
+                    \Phi_{se} = \left(m\cdot m_{s,\mathrm{direct}}\times \Phi_{se,\mathrm{direct}} + m_{s,\mathrm{diffuse}}\times\Phi_{se,\mathrm{diffuse}}\right)~ S_w
+                \end{equation}
 
                 \begin{figure}[ht]
                 \centering
@@ -435,30 +586,42 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                         \small\noindent
                         \textbf{(left to right)} Description.
                     \end{quote}
-                \end{figure}  
+                \end{figure}
 
+                The proportion of solar radiation blocked by the masking element depends on the altitude of the sun in the case of direct sunlight \eqref{eq:solar_factor}. In this study, we use different lengths $d$ of the element to block more or less solar radiation. The advantage of this type of system is that it allows solar rays to pass through in winter (when the altitude of the sun is lower), while blocking it in summer, when we want to prevent the dwelling from overheating (\ref{fig:solar_mask_diagram}). 
 
-                \begin{subequations}
+                \begin{subequations}\label{eq:solar_factor}
                     \begin{empheq}[left=\empheqlbrace]{align}
-                        f_{\mathrm{direct}} &= 1-\frac{d \times \tan(\alpha) - e_c}{h_w} \label{eq:solar_factor_direct}\\
-                        f_{\mathrm{diffuse}} &= 1-\frac{1}{\pi/2}~\tan^{-1}\left(\frac{d}{e_c + h_w/2}\right)\label{eq:solar_factor_diffuse}
+                        m_{s,\mathrm{direct}} &= 1-\frac{d \times \tan(\alpha) - e_c}{h_w} \label{eq:solar_factor_direct}\\
+                        m_{s,\mathrm{diffuse}} &= 1-\frac{1}{\pi/2}~\tan^{-1}\left(\frac{d}{e_c + h_w/2}\right)\label{eq:solar_factor_diffuse}
                     \end{empheq}
                 \end{subequations}
 
-                (\ref{fig:solar_mask})
+                \noindent
+                With,
+                $$
+                \begin{dcases}
+                    d&\text{: Solar mask length (\SI{}{\meter})}\\
+                    \alpha&\text{: Sun altitude (\SI{}{\degree})}\\
+                    h_w&\text{: Windows height (\SI{}{\meter})}\\
+                    e_c&\text{: Distance between the solar mask and the window (\SI{}{\meter})}\\
+                \end{dcases}
+                $$
 
-                \begin{figure}[ht]
-                \centering
-                \includegraphics[width=0.32\columnwidth]{figures/sun_path_Brest_Nice_2022.png}
-                \includegraphics[width=0.32\columnwidth]{figures/direct_solar_factor_masking.png}
-                \includegraphics[width=0.32\columnwidth]{figures/diffuse_solar_factor_masking.png}
-                \caption{\label{fig:solar_mask} Solar path graph and effects of solar protection length on solar transmission factor.}
-                    \begin{quote}
-                        \vspace{-2mm}
-                        \small\noindent
-                        \textbf{(left to right)} Description. \eqref{eq:solar_factor_direct}, \eqref{eq:solar_factor_diffuse}
-                    \end{quote}
-                \end{figure}  
+                % (\ref{fig:solar_mask})
+
+                % \begin{figure}[ht]
+                % \centering
+                % \includegraphics[width=0.32\columnwidth]{figures/sun_path_Brest_Nice_2022.png}
+                % \includegraphics[width=0.32\columnwidth]{figures/direct_solar_factor_masking.png}
+                % \includegraphics[width=0.32\columnwidth]{figures/diffuse_solar_factor_masking.png}
+                % \caption{\label{fig:solar_mask} Solar path graph and effects of solar protection length on solar transmission factor.}
+                %     \begin{quote}
+                %         \vspace{-2mm}
+                %         \small\noindent
+                %         \textbf{(left to right)} Description. \eqref{eq:solar_factor_direct}, \eqref{eq:solar_factor_diffuse}
+                %     \end{quote}
+                % \end{figure}  
             
             % paragraph internal_solar_gains (end)
 
@@ -660,7 +823,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         For horizontal solar radiation on an hourly time step, the relationship between the altitude of the sun and global horizontal radiation is used, followed by calibration of the modelled daily mean value to the daily meteorological data, including a corrective factor (Appendix \ref{sub:details_and_justification_of_sin}).
 
         \begin{equation}\label{eq:solar_eq}
-             S(t_i) = \left(1.09~\frac{\bar{S_d}}{1/24\times\sum_{t_i \in d} \cos\left(\pi/2-\alpha(t_i)\right)} \times \cos\left(\frac{\pi}{2}-\alpha(t_i)\right)\right)^+
+             S(t_i) = \left({\color{red}1.09}~\frac{\bar{S_d}}{1/24\times\sum_{t_i \in d} \cos\left(\pi/2-\alpha(t_i)\right)} \times \cos\left(\frac{\pi}{2}-\alpha(t_i)\right)\right)^+
         \end{equation} 
 
         \noindent
