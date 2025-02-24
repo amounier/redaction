@@ -223,11 +223,11 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
           \end{tabular}
         \end{table}
 
-        Utilisation simplifiée (\cite{fraisse_development_2002}, \cite{rouchier_solving_2018}, \cite{iso_iso_2006})
+        This electrical/thermal analogy has long been used for thermal modelling of buildings, particularly for simplified building models. The numerical resolution of RC models with few resistors and capacitors to model the energy consumption of buildings has existed for over 40 years (\cite{francis_methode_1982}, \cite{madsen_estimation_1995}, \cite{fraisse_development_2002}). An example of a small RC model is detailed in paragraph 2 to illustrate the calculation method used in this study. Simplified RC models are also used in the ISO-13790 standard (\cite{iso_iso_2006}), with five resistors and an equivalent capacitor, to which most researchers add a second capacitor to take account of the inertia of the internal thermal zone (\cite{parc_etude_2014}, \cite{marty-jourjon_identifiability_2022}). \\
 
-        Augmentation du niveau de détail : \cite{bacher_identifying_2011}, connections de RC simple pour faire du multi zone (\cite{belazi_thermal_2022}) puis utilisation détaillée (\cite{wang_development_2019})\\
+        Using these simplified models, it is possible to increase the number of electronic components to take into account more and more phenomena and different inertias, such as the inertia of heating systems ( \cite{bacher_identifying_2011}) or air infiltration (\cite{reynders_quality_2014}). Other researchers are even combining several simplified models to produce multi-zone modelling, enabling several different temperatures to be modelled within the building (\cite{belazi_thermal_2022}, \cite{vallianos_automatic_2022}, \cite{balali_energy_2023}). Finally, by combining the two aspects, other researchers have sought to represent as accurately as possible each component of the dwelling and the associated heat flows in order to obtain a detailed RC model (\cite{wang_development_2019}, \cite{cui_model_2022}). The modelling used here is intermediate, with a detailed RC model with a single thermal zone in the building, including multi-family dwellings. \\
 
-        Limites de la méthode : utilisation comme modèle paramétrique calibré sur des consommations réelles normalement. Ici : typologies abstraites de bâtiments donc pas de consommation réelle mais modélisation de consommations conventionnelle dans tous les cas et analyse en relatif à une consommation initiale. 
+        This last point introduces the limits of this method. In general, RC models are used as grey-box parametric models whose R and C values are the result of calibration on real measured temperatures and consumptions. Thus, at the end of the calibration, the physical interpretation of the parameter values is not guaranteed, depending on the structure of the RC network. In our case, we are applying RC models to building typologies which, by definition, have no actual consumption. It is therefore not possible to calibrate the parameters, and we use the RC model as a conventional physical model. It is therefore certain that the results obtained cannot be used to forecast real energy consumption on a building scale. In this study, we use the modelling results in relative terms for conventional energy needs, to compare the effects of one or more renovation actions on changes in heating and cooling needs.  
         
         % subsubsection rc_analogy (end)
 
@@ -268,6 +268,8 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
           T_e&:\text{ External temprature (\SI{}{\celsius})} \\
           T_w&:\text{ Wall internal temperature (\SI{}{\celsius})} \\
           T_i&:\text{ Internal temperature (\SI{}{\celsius})} \\
+        \end{dcases}\quad\text{and}\quad
+        \begin{dcases}
           R&:\text{ Thermal resistance (\SI{}{\kelvin\per\watt})} \\
           C&:\text{ Thermal capacity (\SI{}{\joule\per\kelvin})} \\
           \Phi_{s,\mathrm{int}}&:\text{ Internal solar flux (\SI{}{\watt})} \\
@@ -343,21 +345,38 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \paragraph{General RC model}\mbox{}\\ % (fold)
         \label{par:general_rc_model}
         
-        In the complete model, the thermal envelope of residential buildings is not modelled using a single wall. The building types used in this study (\ref{sub:tabula_typologies}) are represented by six different surfaces: the 4 walls (each with a different orientation), the roof and the floor. Only one thermal zone is considered per building, even for multi-family dwellings. Gains from solar radiation are taken into account on external walls and inside the building. All the resistances, inertias and sources of heat flow are shown in \ref{fig:rc_mod}.\\ 
-
-        Depending on the type of building, certain parts of the RC network may be short-circuited. This is the case when buildings do not have a basement or when attics are converted.
+        In the complete model, the thermal envelope of residential buildings is not modelled using a single wall. The building types used in this study (\ref{sub:tabula_typologies}) are represented by six different surfaces: the 4 walls (each with a different orientation), the roof and the floor. Only one thermal zone is considered per building, even for multi-family dwellings. Gains from solar radiation are taken into account on external walls and inside the building. All the resistances, inertias and sources of heat flow are shown in \ref{fig:rc_mod}. Depending on the type of building, certain parts of the RC network may be short-circuited. This is the case when buildings do not have a basement or when attics are converted. \\
 
         \begin{figure}[ht]
             \centering
-            \includegraphics[width=0.99\columnwidth]{figures/RC_genmod_unlabeled.pdf}
+            \includegraphics[width=0.99\columnwidth]{figures/genmod.pdf}
             \caption{\label{fig:rc_mod} Diagram of the general RC model.}
             \begin{quote}
                 \vspace{-2mm}
                 \small\noindent
-                À refaire.
+                In a similar way to the simplified diagram shown above (\ref{fig:RClight}), each branch of the equivalent electrical diagram can be interpreted. Firstly, the voltage generator on the left sets the outside temperature. The part on the right indicates the internal flows and inertia. From top to bottom, the branches linking the outside to the inside represent: air infiltration, exchanges through the upper horizontal surface (roof and ceiling), exchanges through the four walls, and exchanges through the floor directly above the ground, the temperature of which ($T_g$) is directly integrated into the model. 
               \end{quote}
         \end{figure} 
 
+        At each time step, we explicitly calculate $\mathbf{x}_{t+\delta}$ of equation \eqref{eq:xtfg}, by updating the vector $\mathbf{u}_{t}$. In particular, the power of the internal emitters $\Phi_{hc}$, the value of which is a function of the indoor temperature ($T_i$) and the set-point temperature for heating ($T_{sh}$) and cooling ($T_{sc}$) \eqref{eq:power_hc}, with $\pm$\SI{1}{\celsius} tolerance for smoothing response. 
+
+        \begin{subequations}\label{eq:power_hc}
+            \begin{empheq}[left=\empheqlbrace]{align}
+            \Phi_h &= 
+            \begin{cases}
+                P_{h,\mathrm{max}} & \text{ if } T_i < T_{sh} - 1\\
+                P_{h,\mathrm{max}}~\left(1+\left((T_{sh} - 1) - T_i\right)/2\right) & \text{ if } T_i \in \left[T_{sh} - 1, T_{sh} + 1\right[\\
+                0 & \text{ else.}
+            \end{cases}\\
+            \Phi_c &=
+            \begin{cases}
+                0 & \text{ if } T_i \leq T_{sc} - 1\\
+                P_{c,\mathrm{max}}~\left(T_i-(T_{sc} - 1)\right)/2 & \text{ if } T_i \in \left]T_{sc} - 1, T_{sc} + 1\right]\\
+                P_{c,\mathrm{max}} & \text{ else.}
+            \end{cases}\\
+            \Phi_{hc} &= \Phi_h + \Phi_c
+            \end{empheq}            
+        \end{subequations}
 
         % paragraph general_rc_model (end)
         % subsubsection model_construction (end)
@@ -831,9 +850,9 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                     0.035 \times S & \text{ if } S>50 
                 \end{cases} & \text{ if } t \in \{ \mathrm{MFH}, \mathrm{AB}\}
             \end{cases}\\ 
-            N_{a,\mathrm{eq}}(S) &= \begin{cases}
-                N(S) & \text{ if } N < 1.75\\
-                1.75 + 0.3 \times \left(N(S) - 1.75\right) & \text{ else.}
+            N_{a,\mathrm{eq}} &= \begin{cases}
+                N & \text{ if } N < 1.75\\
+                1.75 + 0.3 \times \left(N - 1.75\right) & \text{ else.}
             \end{cases}
         \end{empheq}
     \end{subequations}
@@ -1069,79 +1088,79 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
     \subsection{Energy needs for TABULA typologies} % (fold)
     \label{sub:energy_needs_for_tabula_typologies}
 
-        \subsubsection{Single Family House (SFH)} % (fold)
-        \label{ssub:sfh}
+        % \subsubsection{Single Family House (SFH)} % (fold)
+        % \label{ssub:sfh}
 
-        detailler les résultats (\ref{fig:sfh_needs})
+        % detailler les résultats (\ref{fig:sfh_needs})
         
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_SFH_H1b_2000-2020.png}
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_SFH_H3_2000-2020.png}
-            \caption{\label{fig:sfh_needs} Heating and cooling needs for SFH typologies.}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                \textbf{(left to right)} Description
-            \end{quote}
-        \end{figure}
+        % \begin{figure}[ht]
+        %     \centering
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_SFH_H1b_2000-2020.png}
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_SFH_H3_2000-2020.png}
+        %     \caption{\label{fig:sfh_needs} Heating and cooling needs for SFH typologies.}
+        %     \begin{quote}
+        %         \vspace{-2mm}
+        %         \small\noindent
+        %         \textbf{(left to right)} Description
+        %     \end{quote}
+        % \end{figure}
 
-        % subsubsection sfh (end)
+        % % subsubsection sfh (end)
 
-        \subsubsection{Terraced House (TH)} % (fold)
-        \label{ssub:th}
+        % \subsubsection{Terraced House (TH)} % (fold)
+        % \label{ssub:th}
 
-        detailler les résultats (\ref{fig:th_needs})
+        % detailler les résultats (\ref{fig:th_needs})
 
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_TH_H1b_2000-2020.png}
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_TH_H3_2000-2020.png}
-            \caption{\label{fig:th_needs} Heating and cooling needs for TH typologies.}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                \textbf{(left to right)} Description
-            \end{quote}
-        \end{figure}
+        % \begin{figure}[ht]
+        %     \centering
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_TH_H1b_2000-2020.png}
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_TH_H3_2000-2020.png}
+        %     \caption{\label{fig:th_needs} Heating and cooling needs for TH typologies.}
+        %     \begin{quote}
+        %         \vspace{-2mm}
+        %         \small\noindent
+        %         \textbf{(left to right)} Description
+        %     \end{quote}
+        % \end{figure}
         
-        % subsubsection th (end)
+        % % subsubsection th (end)
 
-        \subsubsection{Multi Family House (MFH)} % (fold)
-        \label{ssub:mfh}
+        % \subsubsection{Multi Family House (MFH)} % (fold)
+        % \label{ssub:mfh}
         
-        detailler les résultats (\ref{fig:mfh_needs})
+        % detailler les résultats (\ref{fig:mfh_needs})
 
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_MFH_H1b_2000-2020.png}
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_MFH_H3_2000-2020.png}
-            \caption{\label{fig:mfh_needs} Heating and cooling needs for MFH typologies.}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                \textbf{(left to right)} Description
-            \end{quote}
-        \end{figure}
+        % \begin{figure}[ht]
+        %     \centering
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_MFH_H1b_2000-2020.png}
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_MFH_H3_2000-2020.png}
+        %     \caption{\label{fig:mfh_needs} Heating and cooling needs for MFH typologies.}
+        %     \begin{quote}
+        %         \vspace{-2mm}
+        %         \small\noindent
+        %         \textbf{(left to right)} Description
+        %     \end{quote}
+        % \end{figure}
 
-        % subsubsection mfh (end)
+        % % subsubsection mfh (end)
 
-        \subsubsection{Appartment Block (AB)} % (fold)
-        \label{ssub:ab}
+        % \subsubsection{Appartment Block (AB)} % (fold)
+        % \label{ssub:ab}
 
-        detailler les résultats (\ref{fig:ab_needs})
+        % detailler les résultats (\ref{fig:ab_needs})
         
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_AB_H1b_2000-2020.png}
-            \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_AB_H3_2000-2020.png}
-            \caption{\label{fig:ab_needs} Heating and cooling needs for AB typologies.}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                \textbf{(left to right)} Description
-            \end{quote}
-        \end{figure}
+        % \begin{figure}[ht]
+        %     \centering
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_AB_H1b_2000-2020.png}
+        %     \includegraphics[width=0.49\columnwidth]{figures/typology_energy_needs_AB_H3_2000-2020.png}
+        %     \caption{\label{fig:ab_needs} Heating and cooling needs for AB typologies.}
+        %     \begin{quote}
+        %         \vspace{-2mm}
+        %         \small\noindent
+        %         \textbf{(left to right)} Description
+        %     \end{quote}
+        % \end{figure}
 
         % subsubsection ab (end)
         
