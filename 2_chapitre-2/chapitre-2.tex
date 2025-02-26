@@ -34,6 +34,7 @@
 \usepackage{bbm}
 \usepackage{lmodern}
 \usepackage{empheq}
+\usepackage{stmaryrd}
 
 
 \setitemize{itemsep=0pt}
@@ -356,7 +357,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \begin{quote}
                 \vspace{-2mm}
                 \small\noindent
-                In a similar way to the simplified diagram shown above (\ref{fig:RClight}), each branch of the equivalent electrical diagram can be interpreted. Firstly, the voltage generator on the left sets the outside temperature. The part on the right indicates the internal flows and inertia. From top to bottom, the branches linking the outside to the inside represent: air infiltration, exchanges through the upper horizontal surface (roof and ceiling), exchanges through the four walls, and exchanges through the floor directly above the ground, the temperature of which ($T_g$) is directly integrated into the model. 
+                In a similar way to the simplified diagram shown above (\ref{fig:RClight}), each branch of the equivalent electrical diagram can be interpreted. Firstly, the voltage generator on the left sets the outside temperature. The part on the right indicates the internal flows and inertia. From top to bottom, the branches linking the outside to the inside represent: air infiltration, exchanges through the upper horizontal surface (roof and ceiling), exchanges through the four walls, and exchanges through the floor directly above the ground, the temperature of which ($T_g$) is directly integrated into the model (\ref{par:ground_temperature}). 
               \end{quote}
         \end{figure} 
 
@@ -584,7 +585,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                     \begin{quote}
                         \vspace{-2mm}
                         \small\noindent
-                        \textbf{(left to right)} Description.
+                        \textbf{(left to right)} In the case of direct radiation, the solar masking factor corresponds to the proportion of the window surface reached by the sun's rays. This proportion depends on the length of the mask $e_c$ and the altitude $\alpha$ of the sun in the sky. In the case of diffuse radiation, the masking factor corresponds to the proportion of the sky obscured by the masking element, viewed from the centre of the window. 
                     \end{quote}
                 \end{figure}
 
@@ -625,40 +626,78 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             
             % paragraph internal_solar_gains (end)
 
-            \paragraph{Ground temperature} % (fold)
+            \paragraph{Ground temperature}\mbox{}\\ % (fold)
             \label{par:ground_temperature}
             
+            In the majority of thermal building calculation and modelling tools, the ground temperature is considered to be perfectly exogenous, in the same way as the outdoor temperature. The ground temperature is then defined as a function of the annual outdoor temperature data and the thermal parameters of the ground \eqref{eq:kusuda} (\cite{kusuda_earth_1965}). Other research, meanwhile, has worked on new models of soil temperature, based more on heat conservation equations (\cite{badache_new_2016}).  
+
+            \begin{equation}\label{eq:kusuda}
+              T(z,t) = \overline{T(0,t)} - \frac{\Delta T(0,t)}{2}~ \exp\left(-\frac{z}{\delta}\right)~ \cos\left(\omega t - \phi_s - \frac{z}{\delta}\right)
+            \end{equation}
+            
+            \noindent
+            With,
+            $$
+            \begin{dcases}
+              T(z,t) & \text{: Ground temperature at depth $z$ (in \SI{}{\meter}) and time $t$ (in days (\SI{}{\day}))}\\
+              \overline{T(0,t)} & \text{: Annual mean air temperature (in \SI{}{\celsius})}\\
+              \Delta T(0,t) & \text{: Annual amplitude of air temperature (in \SI{}{\celsius})}\\
+              \delta & \text{: Characteristic depth of soil heat transfer (in \SI{}{\meter})}\\
+              \omega=2\pi/365 & \text{: Angular frequency (in \SI{}{\radian\per\day})}\\
+              \phi_s & \text{: Phase shift (in \SI{}{\radian})}\\
+            \end{dcases}
+            $$
+
+            The characteristic depth of soil heat transfer is a function of the thermal diffusivity $\alpha$ of the soil \eqref{eq:diffusivity_1}, which is itself a function of the thermal parameters of the soil \eqref{eq:diffusivity_2}. In our case, we assume the following parameters: $\lambda = \SI{1.5}{\watt\per\meter\kelvin}$, $\rho = \SI{2500}{\kilo\gram\per\cubic\meter}$, and $c_p = \SI{1000}{\joule\per\kilo\gram\kelvin}$. These values are consistent with those found in the literature (\cite{arkhangelskaya_estimating_2018}, \cite{gerard_determination_2020}). Finally, the phase shift is defined as the day of minimum outdoor temperature in the year, expressed in radians \eqref{eq:diffusivity_3}.  
+              
+            \begin{subequations}\label{eq:diffusivity}
+                \begin{empheq}[left=\empheqlbrace]{align}
+                    \delta &= \sqrt{\frac{2\alpha}{\omega}} \label{eq:diffusivity_1}\\
+                    \alpha &= \frac{\lambda}{\rho c_p} \label{eq:diffusivity_2}\\
+                    \phi_s &= \frac{\pi}{365} \times \arg \min_{d \in \llbracket 0,365 \rrbracket} (T(0,d)) \label{eq:diffusivity_3}
+                \end{empheq}
+            \end{subequations}
+
+            In our case, and in order to take into account the dynamic exchanges between the ground and the modelled buildings, we integrate the ground directly into the RC model as a resistor and a capacitor (\ref{fig:rc_mod}). Modelling the ground by RC analogy is a method used in geothermal research when the aim is to endogenize the thermal responses of the ground (\cite{maestre_new_2015}). Thus, in a semi-infinite 1D soil, differential equation \eqref{eq:rc_soil} is used to define the temperature at a depth $z$ as a function of time. 
+
+            \begin{equation}\label{eq:rc_soil}
+              \frac{\partial T_z(t)}{\partial t} = \frac{1}{RC}\left(T_0(t) - T_z(t)\right)
+            \end{equation}
+            
+            \noindent
+            With,
+            \begin{equation}\label{eq:rc_soil_rc}
+              \frac{1}{RC} = \frac{\lambda S}{z} \times \frac{1}{\rho c_p ~ z ~ S} = \frac{\lambda}{\rho c_p ~z^2} = \frac{\alpha}{z^2}
+            \end{equation}
+
+            \noindent
+            The differential equation \eqref{eq:rc_soil} is solved with the following boundary conditions:
+            \begin{itemize}
+              \item $T_0(t) = T_e$, where $T_e$ is the outdoor temperature
+              \item $T_z(0)$ computed using the \textcite{kusuda_earth_1965} method, defined in equation \eqref{eq:kusuda}. 
+            \end{itemize}
+            
+            To validate the relevance of the RC analogy for the integration of the soil in the thermal model, we compare the model results with data from ERA5 reanalyses (\cite{hersbach_era5_2020}) of soil temperatures at several depths (as available) : $z \in [0.28,1]~\SI{}{\meter}$ and $z\in [1,2.55]~\SI{}{\meter}$ (\ref{fig:ground_temperature}). For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The selected depths to correspond to the ERA5 data are 2/3 of the depth ranges (i.e. \SI{0.76}{\meter} and \SI{2.03}{\meter}), to match the centre of gravity of the thermal resistances and capacities (proportional to depth). To limit the discrepancies due to initialisation, we carry out the calculation over two years and analyse only the second. The RC model is more accurate than the reference method, with a $\mathrm{RMSE}$ \eqref{eq:rmse} of \SI{1.77}{\celsius} compared with \SI{2.05}{\celsius} for the \SI{76}{\centi\meter} depth, then \SI{1.13}{\celsius} compared with \SI{2.3}{\celsius} for the \SI{2.03}{\meter} depth. 
+
+            \begin{figure}[ht]
+                \centering
+                
+                \includegraphics[width=0.335\columnwidth]{figures/modelling_of_ground_temperature_months_Marseille_2010.png}
+                \includegraphics[width=0.655\columnwidth]{figures/timeserie_ground_temperature_Marseille_2010.png}
+                
+                \caption{\label{fig:ground_temperature} Ground temperature at different depths in 2010 for the Marseille weather.}
+                    \begin{quote}
+                        \vspace{-2mm}
+                        \small\noindent
+                        \textbf{(left to right)} Plot of RC modelled soil temperatures as a function of depth for the 12 months of 2010 and outdoor weather corresponding to the city of Marseille in the ERA5 reanalyses. We note a well-known result: from a depth of \SI{10}{\meter}, soil temperature is constant, equal to the average annual surface temperature (\cite{badache_new_2016}, \cite{al-hinti_measurement_2017}). Plot of ground temperatures in 2010 based on ERA5 reanalysis data at \SI{76}{\centi\meter} and \SI{2.03}{\meter} depth. Comparison with the reference model (\cite{kusuda_earth_1965}) and the RC model.
+                    \end{quote}
+                \end{figure}
             % paragraph ground_temperature (end)
         
         % subsubsection model_computation (end)
 
-        \subsubsection{Model verification} % (fold)
-        \label{ssub:model_verification}
-        
-        resultats de comparaisons avec TABULA (\ref{fig:tabula_verif})
-
-        parler des hypothèses propres à la méthodologie de \textcite{pouget_consultants_batiments_2015} et des modifications de behaviour par rapport au conventionnel. 
-
-        \begin{figure}[ht]
-            \centering
-            \includegraphics[width=0.99\columnwidth]{figures/SFH_TABULA_consumption.png}
-            \includegraphics[width=0.99\columnwidth]{figures/TH_TABULA_consumption.png}
-            \includegraphics[width=0.99\columnwidth]{figures/MFH_TABULA_consumption.png}
-            \includegraphics[width=0.99\columnwidth]{figures/AB_TABULA_consumption.png}
-            \caption{\label{fig:tabula_verif} Heating needs comparison with TABULA data.}
-                \begin{quote}
-                    \vspace{-2mm}
-                    \small\noindent
-                    \textbf{(top to bottom)} Description. 
-                \end{quote}
-        \end{figure}  
-
-        comparaison avec \textcite{pomianowski_method_2023} (en faire d'autres)
-        % subsubsection model_verification (end)
-
     % subsection rc_analogy_and_computation (end)
 
-    \clearpage
     \subsection{TABULA typologies} % (fold)
     \label{sub:tabula_typologies}
     
@@ -683,11 +722,11 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             % \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_buildings_ponderated.png}\\
             \includegraphics[width=0.99\columnwidth]{figures/bgc_distribution_tabula_households_ponderated.png}
             \caption{\label{fig:tab_stock} Distribution of TABULA typologies in the French building stock.}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                \textbf{(top to bottom)} Description.  
-              \end{quote}
+            % \begin{quote}
+            %     \vspace{-2mm}
+            %     \small\noindent
+            %     \textbf{(top to bottom)} Description.  
+            %   \end{quote}
         \end{figure}
 
         detail de la methode pour la séparation entre SFH et TH
@@ -699,7 +738,29 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
 
         % subsubsection typologies_distribution (end)
 
+        \subsubsection{RC Model verification} % (fold)
+        \label{ssub:model_verification}
+        
+        resultats de comparaisons avec TABULA (\ref{fig:tabula_verif})
 
+        parler des hypothèses propres à la méthodologie de \textcite{pouget_consultants_batiments_2015} et des modifications de behaviour par rapport au conventionnel. 
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.99\columnwidth]{figures/SFH_TABULA_consumption.png}
+            \includegraphics[width=0.99\columnwidth]{figures/TH_TABULA_consumption.png}
+            \includegraphics[width=0.99\columnwidth]{figures/MFH_TABULA_consumption.png}
+            \includegraphics[width=0.99\columnwidth]{figures/AB_TABULA_consumption.png}
+            \caption{\label{fig:tabula_verif} Heating needs comparison with TABULA data.}
+                \begin{quote}
+                    \vspace{-2mm}
+                    \small\noindent
+                    \textbf{(top to bottom)} Description. 
+                \end{quote}
+        \end{figure}  
+
+        comparaison avec \textcite{pomianowski_method_2023} (en faire d'autres)
+        % subsubsection model_verification (end)
     
 
     % subsection tabula_typologies (end)
@@ -718,7 +779,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         Once the buildings and their physical and technical characteristics have been defined, the second parameter required for thermal modelling is the basic meteorological data. In this simplified RC model, only outdoor temperatures and direct and diffuse solar radiation are considered. In the more comprehensive building energy simulations, data on relative humidity, wind speed and direction and dew point temperature are also used (\cite{bhandari_evaluation_2012}).\\
 
         {\color{red} à changer pour safran}
-        Meteorological reanalysis data from the ERA5 project (\cite{hersbach_era5_2020}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The ERA5 reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_era5_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
+        Meteorological reanalysis data from the ERA5 project (\cite{hersbach_era5_2020}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The SAFRAN reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_safran_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
 
         \begin{subequations}
             \begin{empheq}[left=\empheqlbrace]{align}
@@ -735,30 +796,8 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \end{dcases}
         $$
 
-        \begin{table}[ht]
-            \caption{\label{tab:rmse_era5_mf} Table of differences between ERA5 reanalysis and Météo-France observation data (mean temperature and global radiation) for the 8 French climate zones.}
-            \resizebox{\columnwidth}{!}{
-            \begin{tabular}{lllcccccccc}
-            \toprule
-             &&& H1a & H1b & H1c & H2a & H2b & H2c & H2d & H3 \\
-            
-             &unit&& 2010-2023 & 1994-1999 & 2017-2023 & 2009-2023 & 2011-2023 & 1968-2023 & 2004-2017 & 2002-2011 \\
-            \midrule
-            MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.35 & 0.52 & 0.60 & 0.21 & 0.22 & 0.48 & 1.40 & 0.99 \\
-            &&$\mathrm{RMSE}$&  0.45 & 0.64 & 0.68 & 0.26 & 0.28 & 0.61 & 1.50 & 1.14 \\
-            GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$&  1.50 & 5.22 & 2.43 & 1.70 & 1.47 & 2.06 & 2.83 & 1.70 \\
-            &&$\mathrm{RMSE}$&  1.94 & 6.37 & 3.68 & 2.27 & 1.90 & 2.76 & 6.10 & 2.10 \\
-            \bottomrule
-            \end{tabular}}
-            \begin{quote}
-                \vspace{-2mm}
-                \small\noindent
-                The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
-            \end{quote}
-        \end{table}
-
         % \begin{table}[ht]
-        %     \caption{\label{tab:rmse_safran_mf} Table of differences between SAFRAN reanalysis and Météo-France observation data (mean temperature and global radiation) for the 8 French climate zones.}
+        %     \caption{\label{tab:rmse_era5_mf} Table of differences between ERA5 reanalysis and Météo-France observation data (mean temperature and global radiation) for the 8 French climate zones.}
         %     \resizebox{\columnwidth}{!}{
         %     \begin{tabular}{lllcccccccc}
         %     \toprule
@@ -766,10 +805,10 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             
         %      &unit&& 2010-2023 & 1994-1999 & 2017-2023 & 2009-2023 & 2011-2023 & 1968-2023 & 2004-2017 & 2002-2011 \\
         %     \midrule
-        %     MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.29 & 0.51 & 1.00 & 0.19 & 0.24 & 0.34 & 1.08 & 0.25 \\
-        %     &&$\mathrm{RMSE}$& 0.35 & 0.55 & 1.09 & 0.24 & 0.32 & 0.43 & 1.19 & 0.35 \\
-        %     GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$& 4.47 & 5.40 & 2.47 & 6.39 & 2.45 & 3.37 & 6.39 & 3.48 \\
-        %     &&$\mathrm{RMSE}$& 5.64 & 6.76 & 4.02 & 7.63 & 3.19 & 4.52 & 8.71 & 4.52 \\
+        %     MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.35 & 0.52 & 0.60 & 0.21 & 0.22 & 0.48 & 1.40 & 0.99 \\
+        %     &&$\mathrm{RMSE}$&  0.45 & 0.64 & 0.68 & 0.26 & 0.28 & 0.61 & 1.50 & 1.14 \\
+        %     GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$&  1.50 & 5.22 & 2.43 & 1.70 & 1.47 & 2.06 & 2.83 & 1.70 \\
+        %     &&$\mathrm{RMSE}$&  1.94 & 6.37 & 3.68 & 2.27 & 1.90 & 2.76 & 6.10 & 2.10 \\
         %     \bottomrule
         %     \end{tabular}}
         %     \begin{quote}
@@ -778,6 +817,28 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         %         The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
         %     \end{quote}
         % \end{table}
+
+        \begin{table}[ht]
+            \caption{\label{tab:rmse_safran_mf} Table of differences between SAFRAN reanalysis and Météo-France observation data (mean temperature MT and global radiation GR) for the 8 French climate zones.}
+            \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lllcccccccc}
+            \toprule
+             &&& H1a & H1b & H1c & H2a & H2b & H2c & H2d & H3 \\
+            
+             &unit&& 2010-2023 & 1994-1999 & 2017-2023 & 2009-2023 & 2011-2023 & 1968-2023 & 2004-2017 & 2002-2011 \\
+            \midrule
+            MT&\SI{}{\celsius}&$\mathrm{MAE}$ & 0.29 & 0.51 & 1.00 & 0.19 & 0.24 & 0.34 & 1.08 & 0.25 \\
+            &&$\mathrm{RMSE}$& 0.35 & 0.55 & 1.09 & 0.24 & 0.32 & 0.43 & 1.19 & 0.35 \\
+            GR&\SI{}{\kilo\joule\per\square\centi\meter} &$\mathrm{MAE}$& 4.47 & 5.40 & 2.47 & 6.39 & 2.45 & 3.37 & 6.39 & 3.48 \\
+            &&$\mathrm{RMSE}$& 5.64 & 6.76 & 4.02 & 7.63 & 3.19 & 4.52 & 8.71 & 4.52 \\
+            \bottomrule
+            \end{tabular}}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                The time periods under the climate zone names correspond to the time range available for the weather station closest to the location defined for the climate region (i.e. the central prefecture (\ref{fig:zcl})). 
+            \end{quote}
+        \end{table}
 
         \paragraph{Projection data}\mbox{}\\ % (fold)
         \label{par:proj_data}
