@@ -706,11 +706,90 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         
         To avoid simulating all of the 36.8 million dwellings of mainland France (\cite{insee_378_2023}), we carry out thermal modelling on building typologies, architectural archetypes of French buildings. These typologies were defined as part of the European TABULA and EPISCOPE projects, both included in the Intelligent Energy Europe (IEE) Programme and launched in 2009 and 2013 respectively. The TABULA project has made it possible to define building typologies within a common framework for the whole European Union (\cite{loga_typology_2012}). This implies that the method described in this paper can be reproduced for all European countries. The EPISCOPE project then enabled these typologies to be strengthened and to develop initial methods for targeting priority energy renovations in order to reduce heating consumption in European residential buildings (\cite{loga_tabula_2016}). \\
 
-        For mainland France, there are 40 building typologies (\cite{pouget_consultants_batiments_2015}), based on 4 types of building: single-family house (SFH), terraced-house (TH), multi-family house (MFH) (collective flats of less than 10 dwellings), and apartment block (AB)  (of 10 dwellings or more). The typologies also distinguish ten construction periods, coinciding with the major periods in building techniques and construction codes, setting out specific thermal requirements. The first French thermal regulation was the RT1974 (\cite{jorf_arrete_1974}), following the oil crisis of 1973. For each of these 40 types, 3 levels of insulation are also defined: initial (corresponding to the state at the time of construction), standard (corresponding to the requirements of the BBC-Renovation label (\cite{observatoire_bbc_batiments_2019}, \cite{effinergie_label_2023})) and advanced (corresponding to a passive or positive energy building (BEPOS) (\cite{observatoire_bbc_batiments_2018})). The typologies and their main geometric and thermal characteristics are summarised in Table 1. 
+        For mainland France, there are 40 building typologies (\cite{pouget_consultants_batiments_2015}), based on 4 types of building: single-family house (SFH), terraced-house (TH), multi-family house (MFH) (collective flats of less than 10 dwellings), and apartment block (AB)  (of 10 dwellings or more). The typologies also distinguish ten construction periods, coinciding with the major periods in building techniques and construction codes, setting out specific thermal requirements. The first French thermal regulation was the RT1974 (\cite{jorf_arrete_1974}), following the oil crisis of 1973. For each of these 40 types, 3 levels of insulation are also defined: initial (corresponding to the state at the time of construction), standard (corresponding to the requirements of the BBC-Renovation label (\cite{observatoire_bbc_batiments_2019}, \cite{effinergie_label_2023})) and advanced (corresponding to a passive or positive energy building (BEPOS) (\cite{observatoire_bbc_batiments_2018})). The typologies and their main geometric and thermal characteristics are summarised in \ref{tab:tabula_typologies}. Typologies 1, 2, 3 and 4 (corresponding to buildings constructed before 1974) are the only ones without insulation in the initial state, and part of the results will therefore focus on the renovation strategies of these typologies alone. 
 
-        TABLEAU\\
+        \begin{table}[ht]
+            \centering
+            \caption{\label{tab:tabula_typologies} Table of EPISCOPE/TABULA typologies at initial level.}
+            \small
+            \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lllcccccccccc}
+            \toprule
+            Category & Variable & Unit & &  &  &  &  &  & &  &  &  \\
+            \midrule
+             & Construction period & &   & 1915 & 1949 & 1968 & 1975 & 1982 & 1990 & 2000 & 2006 & 2013 \\
+             & & &  1914 & 1948 & 1967 & 1974 & 1981 & 1989 & 1999 & 2005 & 2012 & 2021 \\
+             & Insulation standards & boolean &  &  &  &  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+            \midrule
+             &  &  & SFH.01 & SFH.02 & SFH.03 & SFH.04 & SFH.05 & SFH.06 & SFH.07 & SFH.08 & SFH.09 & SFH.10 \\
+            \midrule
+            Building & Surface & \SI{}{\square\meter} & 88.0 & 86.0 & 72.0 & 119.0 & 130.0 & 144.0 & 97.0 & 111.0 & 95.0 & 103.0 \\
+             & Levels & - & 2.0 & 3.0 & 1.5 & 1.5 & 2.0 & 2.0 & 1.0 & 2.0 & 3.0 & 2.0 \\
+             & Basement & boolean & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &  &  & \checkmark & \checkmark & \checkmark \\
+             & Converted attic & boolean &  &  &  & \checkmark & \checkmark & \checkmark &  &  &  & \checkmark \\
+             & \# semi-detached & - & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+             & Building orientation & - & S & W & W & W & S & S & N & E & E & S \\
+             & Windows surface & \SI{}{\square\meter} & 15.0 & 15.0 & 13.0 & 19.0 & 33.0 & 15.0 & 15.0 & 19.0 & 16.0 & 20.0 \\
+            Insulation & Wall insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 4.0 & 8.0 & 8.0 & 10.0 & 0.0 & 10.0 \\
+             & Floor insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 5.0 & 2.0 & 7.0 & 10.0 & 10.0 & 0.0 \\
+             & Windows U-value & \SI{}{\watt\per\square\meter\kelvin} & 4.8 & 4.8 & 2.6 & 2.6 & 2.8 & 2.6 & 2.6 & 1.8 & 1.6 & 1.4 \\
+             & Roof U-value & \SI{}{\watt\per\square\meter\kelvin} & 1.1 & 1.6 & 2.4 & 1.4 & 0.7 & 0.7 & 0.2 & 0.2 & 0.2 & 0.2 \\
+            Energy needs & Heating needs & \SI{}{\kilo\watthour\per\square\meter\year} & 158.0 & 169.0 & 172.0 & 127.0 & 107.0 & 85.0 & 89.0 & 74.0 & 76.0 & 52.0 \\
+            \midrule
+             &  &  & TH.01 & TH.02 & TH.03 & TH.04 & TH.05 & TH.06 & TH.07 & TH.08 & TH.09 & TH.10 \\
+            \midrule
+            Building & Surface & \SI{}{\square\meter} & 144.0 & 88.0 & 79.0 & 105.0 & 75.0 & 81.0 & 155.0 & 62.0 & 67.0 & 93.0 \\
+             & Levels & - & 2.0 & 2.0 & 2.0 & 2.0 & 3.0 & 2.0 & 2.0 & 2.0 & 1.0 & 1.0 \\
+             & Basement & boolean &  & \checkmark &  & \checkmark & \checkmark & \checkmark &  & \checkmark &  &  \\
+             & Converted attic & boolean & \checkmark &  &  & \checkmark &  &  &  &  &  &  \\
+             & \# semi-detached & - & 1.0 & 2.0 & 1.0 & 2.0 & 2.0 & 1.0 & 2.0 & 2.0 & 1.0 & 1.0 \\
+             & Building orientation & - & S & S & W & S & S & E & N & S & W & S \\
+             & Windows surface & \SI{}{\square\meter} & 32.0 & 10.0 & 17.0 & 21.0 & 15.0 & 13.0 & 14.0 & 22.0 & 23.0 & 16.0 \\
+            Insulation & Wall insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 4.0 & 7.0 & 8.0 & 10.0 & 0.0 & 12.0 \\
+             & Floor insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 4.0 & 16.0 & 7.0 & 10.0 & 10.0 & 16.0 \\
+             & Windows U-value & \SI{}{\watt\per\square\meter\kelvin} & 4.8 & 4.8 & 2.6 & 2.6 & 3.1 & 2.6 & 1.8 & 1.6 & 1.6 & 1.4 \\
+             & Roof U-value & \SI{}{\watt\per\square\meter\kelvin} & 1.2 & 2.9 & 1.4 & 3.0 & 0.5 & 0.3 & 0.2 & 0.2 & 0.2 & 0.1 \\
+            Energy needs & Heating needs & \SI{}{\kilo\watthour\per\square\meter\year} & 152.0 & 170.0 & 166.0 & 128.0 & 103.0 & 69.0 & 41.0 & 66.0 & 71.0 & 44.0 \\
+            \midrule
+             &  &  & MFH.01 & MFH.02 & MFH.03 & MFH.04 & MFH.05 & MFH.06 & MFH.07 & MFH.08 & MFH.09 & MFH.10 \\
+            \midrule
+            Building & Surface & \SI{}{\square\meter} & 213.0 & 394.0 & 397.0 & 460.0 & 179.0 & 851.0 & 682.0 & 497.0 & 594.0 & 539.0 \\
+             & Levels & - & 4.0 & 3.0 & 4.0 & 4.0 & 2.0 & 4.0 & 4.0 & 4.0 & 3.0 & 3.0 \\
+             & Basement & boolean & \checkmark & \checkmark & \checkmark &  &  & \checkmark &  & \checkmark & \checkmark & \checkmark \\
+             & Converted attic & boolean & \checkmark &  &  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+             & \# semi-detached & - & 0.0 & 2.0 & 2.0 & 0.0 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 & 0.0 \\
+             & Building orientation & - & E & S & S & W & E & W & E & E & S & S \\
+             & Windows surface & \SI{}{\square\meter} & 77.0 & 46.0 & 92.0 & 137.0 & 40.0 & 149.0 & 81.9 & 81.0 & 119.0 & 92.0 \\
+            Insulation & Wall insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 4.0 & 4.0 & 8.0 & 10.0 & 10.0 & 10.0 & 21.0 \\
+             & Floor insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 2.0 & 6.0 & 10.0 & 10.0 & 12.0 & 16.0 \\
+             & Windows U-value & \SI{}{\watt\per\square\meter\kelvin} & 2.6 & 2.8 & 4.8 & 5.6 & 2.8 & 2.8 & 2.6 & 1.6 & 1.6 & 1.4 \\
+             & Roof U-value & \SI{}{\watt\per\square\meter\kelvin} & 1.4 & 2.4 & 2.4 & 0.8 & 0.5 & 0.6 & 0.4 & 0.3 & 0.2 & 0.2 \\
+            Energy needs & Heating needs & \SI{}{\kilo\watthour\per\square\meter\year} & 132.0 & 122.0 & 125.0 & 104.0 & 109.0 & 87.0 & 62.0 & 52.0 & 45.0 & 36.0 \\
+            \midrule
+             &  &  & AB.01 & AB.02 & AB.03 & AB.04 & AB.05 & AB.06 & AB.07 & AB.08 & AB.09 & AB.10 \\
+             \midrule
+            Building & Surface & \SI{}{\square\meter} & 1713.0 & 754.0 & 1981.0 & 4297.0 & 1227.0 & 3348.0 & 4890.0 & 2344.0 & 4660.0 & 2210.0 \\
+             & Levels & - & 7.0 & 7.0 & 10.0 & 6.0 & 7.0 & 5.0 & 8.0 & 7.0 & 6.0 & 6.0 \\
+             & Basement & boolean & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+             & Converted attic & boolean & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+             & \# semi-detached & - & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+             & Building orientation & - & W & W & E & W & W & N & S & W & E & N \\
+             & Windows surface & \SI{}{\square\meter} & 365.0 & 166.0 & 408.0 & 1146.0 & 260.0 & 306.0 & 725.0 & 215.0 & 800.0 & 340.0 \\
+            Insulation & Wall insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 4.0 & 4.0 & 4.0 & 8.0 & 10.0 & 12.0 & 15.9 \\
+             & Floor insulation thickness & \SI{}{\centi\meter} & 0.0 & 0.0 & 0.0 & 0.0 & 5.0 & 8.0 & 8.0 & 10.0 & 16.0 & 12.0 \\
+             & Windows U-value & \SI{}{\watt\per\square\meter\kelvin} & 4.8 & 2.8 & 2.6 & 2.6 & 2.8 & 2.6 & 3.3 & 1.6 & 1.6 & 1.4 \\
+             & Roof U-value & \SI{}{\watt\per\square\meter\kelvin} & 2.3 & 3.2 & 3.0 & 3.2 & 0.8 & 0.6 & 0.4 & 0.2 & 0.3 & 0.1 \\
+            Energy needs & Heating needs & \SI{}{\kilo\watthour\per\square\meter\year} & 161.0 & 109.0 & 108.0 & 94.0 & 105.0 & 64.0 & 66.0 & 41.0 & 35.0 & 22.0 \\
+            \bottomrule
+            \end{tabular}
+            }
+            \begin{quote}
+                \vspace{-1mm}
+                \small\noindent
+                Only the main geometric and thermal parameters of the typologies are shown in this table. Other parameters, such as the thickness of walls and their materials, the distinction between glazed surfaces by orientation, etc., are not displayed for the sake of clarity.  
+            \end{quote}
+        \end{table}
 
-        typologies non isolées en état initial 
         % subsubsection typologies_definition (end)
 
         \subsubsection{Typology representation in the French building stock} % (fold)
@@ -760,7 +839,20 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
                 \end{quote}
         \end{figure}  
 
-        comparaison avec \textcite{pomianowski_method_2023} (en faire d'autres)
+        comparaison avec \textcite{pomianowski_method_2023} (\ref{fig:model_validation}) (en faire d'autres)
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.32\columnwidth]{figures/effect_walls_insulation_heating_needs_litterature.png}
+            \includegraphics[width=0.32\columnwidth]{figures/blank.png}
+            \includegraphics[width=0.32\columnwidth]{figures/blank.png}
+            \caption{\label{fig:model_validation} Literature comparison for model validation}
+                \begin{quote}
+                    \vspace{-2mm}
+                    \small\noindent
+                    \textbf{(top to bottom)} Description. 
+                \end{quote}
+        \end{figure}  
         % subsubsection model_verification (end)
     
 
@@ -779,8 +871,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         
         Once the buildings and their physical and technical characteristics have been defined, the second parameter required for thermal modelling is the basic meteorological data. In this simplified RC model, only outdoor temperatures and direct and diffuse solar radiation are considered. In the more comprehensive building energy simulations, data on relative humidity, wind speed and direction and dew point temperature are also used (\cite{bhandari_evaluation_2012}).\\
 
-        {\color{red} à changer pour safran}
-        Meteorological reanalysis data from the ERA5 project (\cite{hersbach_era5_2020}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the open-source Open-Meteo historical weather API (\cite{zippenfenig_open-meteocom_2024}). The SAFRAN reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_safran_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
+        Meteorological reanalysis data from the SAFRAN-ISBA hydro-meteorological model (\cite{habets_safran-isba-modcou_2008}) are used to calibrate the thermal model with past climate data over a continuous and complete spatial and temporal coverage. For ease of access, downloading and manipulation of the data, the ERA5 data is accessed via the GéoSAS SAFRAN API (\cite{bera_geosas_2015}). The SAFRAN reanalysis data are compared in terms of Mean Absolute Error ($\mathrm{MAE}$) \eqref{eq:mae} and Root Mean Square Error ($\mathrm{RMSE}$) \eqref{eq:rmse} with the Météo-France observation data (\ref{tab:rmse_safran_mf}, Appendix \ref{sub:comparison_between_mf_observation_and_era5_reanalysis_data}) to check that there is no systematic bias, at the stations closest to the central prefectures for each of the 8 French climate zones (\ref{ssub:french_climate_zones}). The two compared variables are: the monthly average of daily mean of daily maximal and minimal temperature (MT) in \SI{}{\celsius}, and the monthly cumulative sum of daily global radiation (GR) in \SI{}{\kilo\joule\per\square\centi\meter}. The results are perfectly similar, with differences of around \num{0.6} and \num{2.4}, for temperature and global radiation ranges between 0 and \SI{25}{\celsius} and 10 and \SI{80}{\kilo\joule\per\square\centi\meter} respectively. 
 
         \begin{subequations}
             \begin{empheq}[left=\empheqlbrace]{align}
@@ -885,7 +976,8 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         For horizontal solar radiation on an hourly time step, the relationship between the altitude of the sun and global horizontal radiation is used, followed by calibration of the modelled daily mean value to the daily meteorological data, including a corrective factor (Appendix \ref{sub:details_and_justification_of_sin}).
 
         \begin{equation}\label{eq:solar_eq}
-             S(t_i) = \left({\color{red}1.09}~\frac{\bar{S_d}}{1/24\times\sum_{t_i \in d} \cos\left(\pi/2-\alpha(t_i)\right)} \times \cos\left(\frac{\pi}{2}-\alpha(t_i)\right)\right)^+
+             S(t_i) = \left(\frac{\bar{S_d}}{1/24\times\sum_{t_i \in d} \cos\left(\pi/2-\alpha(t_i)\right)} \times \cos\left(\frac{\pi}{2}-\alpha(t_i)\right)\right)^+
+             % {\color{red}1.09}
         \end{equation} 
 
         \noindent
@@ -904,9 +996,9 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
         \paragraph{Definition of global warming periods}\mbox{}\\ % (fold)
         \label{par:gw_periods}
 
-        For this study, and to measure the effects of the global warming at different amplitudes, three reference periods are used:
+        For this study, and to measure the effects of the global warming at different amplitudes, three periods are used:
         \begin{itemize}
-            \item Current period: 2000-2020
+            \item Current (or reference) period: 2000-2020
             \item +\SI{2}{\celsius} global warming
             \item +\SI{4}{\celsius} global warming
         \end{itemize}
@@ -917,38 +1009,54 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \includegraphics[width=0.49\columnwidth]{figures/mean_yearly_temperature_france_gw2deg.png}
             \includegraphics[width=0.49\columnwidth]{figures/mean_yearly_temperature_france_gw4deg.png}
             \caption{\label{fig:gw24} Mean yearly temperature over mainland France for +\SI{2}{\celsius} and +\SI{4}{\celsius} of global warming.}
-            % \begin{quote}
-            %     \vspace{-2mm}
-            %     \small\noindent
-            %     \textbf{(left to right)} Description.  
-            %   \end{quote}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                The data for the two levels of warming come from the Euro-CORDEX data in the IPCC Working Group I interactive atlas. The data has been filtered for mainland France only.
+              \end{quote}
         \end{figure}
 
-        These warming temperatures, in the framework of RCP8.5, do not correspond to the same time period for all the climate models used in this study (\ref{tab:climate_models}), because each model has its own dynamics (Appendix \ref{sub:projected_temperature_and_solar_radiation_data}). Thus, the time periods associated with the warming levels of each model are summarised in the \ref{tab:climate_periods}. 
+        These warming temperatures, in the framework of RCP8.5, do not correspond to the same time period for all the climate models used in this study (\ref{tab:climate_models}), because each model has its own dynamics (Appendix \ref{sub:projected_temperature_and_solar_radiation_data}). Thus, the time periods associated with the warming levels of each model are summarised in the \ref{tab:climate_periods} and the maps of mean annual temperatures and annual solar irradiance for these periods are shown in \ref{fig:map_temp_sun}, for climate model 2. 
 
         \begin{table}[ht]
             \centering
-            \caption{\label{tab:climate_periods} Temporal periods of global warming levels for the different climate models.}
+            \caption{\label{tab:climate_periods} Temporal periods of global warming levels in RCP8.5 for the different climate models.}
             % \resizebox{\columnwidth}{!}{
             \small
             \begin{tabular}{ccc}
                 \toprule
                 Climate model no. & +\SI{2}{\celsius} & +\SI{4}{\celsius} \\
                 \midrule
-                1 & 2029 -- 2049 & 2064 -- 2084 \\
-                2 & 2018 -- 2038 & 2056 -- 2076 \\
-                3 & 2024 -- 2044 & 2066 -- 2086 \\
-                4 & 2013 -- 2033 & 2056 -- 2076 \\
-                5 & 2004 -- 2024 & 2046 -- 2066 \\
+                1 & 2020 -- 2040 & 2059 -- 2079 \\
+                2 & 2013 -- 2033 & 2054 -- 2074 \\
+                3 & 2017 -- 2037 & 2061 -- 2081 \\
+                4 & 2005 -- 2025 & 2047 -- 2067 \\
+                5 & 2001 -- 2021 & 2040 -- 2060 \\
                 \bottomrule
                 \end{tabular}
             % }
             \begin{quote}
                 % \vspace{-2mm}
                 \small\noindent
-                The periods were identified on the basis of the 20-year rolling average of the annual mean temperature records from each of the climate models. In the case of model no. 4, the period corresponding to +\SI{2}{\celsius} is very close to the reference period, which limits the differences between the current (reference) period and the effects of global warming at +\SI{2}{\celsius}.
+                The periods were identified on the basis of the 20-year rolling average of the annual mean temperature records from each of the climate models. In the case of model no. 4 and 5, the period corresponding to +\SI{2}{\celsius} is very close to the reference period, which limits the differences between the current (reference) period and the effects of global warming at +\SI{2}{\celsius}.
             \end{quote}
         \end{table}
+
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.32\columnwidth]{figures/map_tas_mod1_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/map_tas_mod1_2deg.png}
+            \includegraphics[width=0.32\columnwidth]{figures/map_tas_mod1_4deg.png}\\
+            \includegraphics[width=0.32\columnwidth]{figures/map_rsds_mod1_2000-2020.png}
+            \includegraphics[width=0.32\columnwidth]{figures/map_rsds_mod1_2deg.png}
+            \includegraphics[width=0.32\columnwidth]{figures/map_rsds_mod1_4deg.png}
+            \caption{\label{fig:map_temp_sun} Mean yearly temperature and mean yearly solar irradiance over mainland France for reference period (2000-2020), and difference for periods of +\SI{2}{\celsius} and +\SI{4}{\celsius} of global warming, for the climate model no. 2.}
+            \begin{quote}
+                \vspace{-2mm}
+                \small\noindent
+                \textbf{(left to right, top to bottom)} Average of daily mean temperatures between 2000 and 2020 and map of the differences in mean temperatures for the periods with +\SI{2}{\celsius} and +\SI{4}{\celsius} of warming (i.e. 2013-2033 and 2054-2074 in the case of model no. 2). The increase in temperature is relatively uniform over the region, but slightly lower along the Channel. For the daily mean solar radiation, one can recognise the spatial division of the calibration zones, and to some extent the division of the winter climate zones (\ref{fig:zcl}). Model 2 shows an inhomogeneous increase in solar radiation over the region. These patterns differ from one climate model to another (Appendix \ref{sub:projected_temperature_and_solar_radiation_data}). 
+              \end{quote}
+        \end{figure}
 
         The inter-annual variability of meteorological data makes the calculation of energy needs for a given building very sensitive. To compensate for this, the French statistics services propose to provide climate-corrected energy consumption figures (\cite{sdes_bilan_2023}). This makes it possible to measure the effect of thermal renovations alone, dissociated from the effects of meteorological variations from one year to the next. However, in the case of this study, we specifically want to look at the interaction between renovations and climate change. The most intuitive way of taking annual variability into account is to carry out several years of energy simulations in order to observe the distribution of needs and their inter-annual variations. \\
 
@@ -1094,7 +1202,7 @@ critères de soutiens aux travaux d'isolation (\cite{france_strategie_dispositif
             \begin{quote}
                 \vspace{-2mm}
                 \small\noindent
-                \textbf{(left to right)} . 
+                \textbf{(left to right)} Evolution of conventional set-point temperatures for heating and cooling over the week. Wednesday can be identified, as its period of presence extends into the afternoon, unlike the other working days. Graph of the relationship between the number of equivalent adults in a dwelling as a function of the surface area (in \SI{}{\square\meter}). The differences between multi-family and single-family dwellings can be explained by the fact that collective housing is generally smaller and lifestyles are denser. In the same way as the set temperatures, the graph shows the change over the week in internal heat gain due to the occupants and their equipment. This heat flow (in \SI{}{\watt}) is noted $\Phi_i$ in the model shown in \ref{fig:rc_mod}. 
                 
                  
               \end{quote}
